@@ -24,11 +24,12 @@
     body { padding: 12px 12px calc(16px + var(--safe)); }
     button { font: inherit; color: inherit; }
     #app { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-    .stage-wrap { position: relative; width: 100%; aspect-ratio: 4/3; background: #efe4d3; border-radius: 20px; overflow: hidden; animation: pagein .35s ease-out; }
+    .stage-wrap { position: relative; width: 100%; aspect-ratio: 4/3; background: #efe4d3; border-radius: 20px; overflow: hidden; }
+    .stage-wrap.enter { animation: pagein .35s ease-out; }
     .stage-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none; user-select: none; }
     .fx, .spot { position: absolute; }
     .spot { background: transparent; border: 0; padding: 0; cursor: pointer; }
-    .hint { position: absolute; left: 50%; top: 45%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 999px; border: 2px solid #fff; box-sizing: border-box; pointer-events: none; animation: pulse 1.8s ease-out infinite; }
+    .hint { position: absolute; left: 50%; top: 45%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 999px; border: 2px solid #fff; box-sizing: border-box; pointer-events: none; animation: pulse 1.8s ease-out 2 forwards; }
     .nametag { position: absolute; left: 50%; top: 8%; transform: translateX(-50%); background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 16px; font-weight: 700; white-space: nowrap; pointer-events: none; }
     .pop { animation: pop .42s ease-out; }
     .panel { display: flex; flex-direction: column; gap: 12px; }
@@ -563,15 +564,7 @@
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
   }
 
-  function render() {
-    const page = pages[state.index];
-    const onCover = !!page.cover;
-    const last = state.index === pages.length - 1;
-    const showEnFirst = state.mode === "echo" && state.echoLang === "en";
-    const zhActive = state.playing === "yue";
-    const enActive = state.playing === "en";
-    const started = state.mode !== null;
-
+  function overlayHTML(page) {
     let fx = "";
     if (page.fx === "petals") {
       fx = petals.map((p, i) => `<span class="petal" style="left:${p.left}%;width:${p.size}px;height:${p.size}px;background:${p.color};animation-delay:${p.delay}ms"></span>`).join("");
@@ -580,17 +573,49 @@
     } else if (page.fx === "sun") {
       fx = `<span class="sun"></span>`;
     }
-    if (state.echoPhase === "praise" && state.mode === "echo" && !onCover) {
-      fx += [0,1,2,3,4].map((i) => `<span class="spark" style="left:${18 + i * 16}%;top:${10 + (i % 2) * 8}%;width:12px;height:12px;animation-delay:${i * 180}ms"></span>`).join("");
-    }
-
     const spots = page.spots.map((spot) => {
       const motion = spot.motion ? spot.motion : "";
-      const pop = state.popped === spot.id ? " pop" : "";
       const hint = spot.hint !== false ? `<span class="hint"></span>` : "";
-      const tag = state.label && state.label.id === spot.id ? `<span class="nametag">${esc(state.label.text)}</span>` : "";
-      return `<button type="button" class="spot ${motion}${pop}" data-spot="${esc(spot.id)}" aria-label="${esc(spot.yue)}" style="left:${spot.left}%;top:${spot.top}%;width:${spot.width}%;height:${spot.height}%;">${hint}${tag}</button>`;
+      return `<button type="button" class="spot ${motion}" data-spot="${esc(spot.id)}" aria-label="${esc(spot.yue)}" style="left:${spot.left}%;top:${spot.top}%;width:${spot.width}%;height:${spot.height}%;">${hint}</button>`;
     }).join("");
+    return `<div id="overlays">${fx}${spots}</div><div id="sparks"></div>`;
+  }
+
+  function syncSpotUi() {
+    const stage = document.getElementById("stage");
+    if (!stage) return;
+    stage.querySelectorAll("[data-spot]").forEach((btn) => {
+      const id = btn.getAttribute("data-spot");
+      btn.classList.toggle("pop", state.popped === id);
+      let tag = btn.querySelector(".nametag");
+      if (state.label && state.label.id === id) {
+        if (!tag) {
+          tag = document.createElement("span");
+          tag.className = "nametag";
+          btn.appendChild(tag);
+        }
+        tag.textContent = state.label.text;
+      } else if (tag) {
+        tag.remove();
+      }
+    });
+    const page = pages[state.index];
+    const wantSparks = state.echoPhase === "praise" && state.mode === "echo" && !page.cover;
+    let sparks = document.getElementById("sparks");
+    if (!sparks) return;
+    const html = wantSparks
+      ? [0,1,2,3,4].map((i) => `<span class="spark" style="left:${18 + i * 16}%;top:${10 + (i % 2) * 8}%;width:12px;height:12px;animation-delay:${i * 180}ms"></span>`).join("")
+      : "";
+    if (sparks.innerHTML !== html) sparks.innerHTML = html;
+  }
+
+  function panelHTML() {
+    const page = pages[state.index];
+    const onCover = !!page.cover;
+    const last = state.index === pages.length - 1;
+    const showEnFirst = state.mode === "echo" && state.echoLang === "en";
+    const zhActive = state.playing === "yue";
+    const enActive = state.playing === "en";
 
     const zhLine = `<div class="line${zhActive ? " active" : ""}">${esc(page.zh)}</div>`;
     const enLine = `<div class="line${enActive ? " active" : ""}" style="font-size:20px">${esc(page.en)}</div>`;
@@ -601,72 +626,72 @@
       else lines = zhLine + ((state.mode !== "echo" || state.secondLine || state.echoLang === "en") ? enLine : spacer);
     }
 
-    let mid = "";
     if (onCover) {
-      mid = `<div class="center">
+      return `<div class="center">
         <div class="title">小熊去公園</div>
         <div class="sub">Little Bear Goes to the Park</div>
         <div class="hint-text">成幅圖都可以撳，聽同玩</div>
         <button type="button" class="btn primary" data-act="listen">聽故事</button>
         <button type="button" class="btn teal" data-act="echo">跟讀</button>
       </div>`;
-    } else {
-      let head = "";
-      if (state.mode === "echo") {
-        head = `<div class="row">
+    }
+
+    let head = "";
+    if (state.mode === "echo") {
+      head = `<div class="row">
           <button type="button" class="btn${state.echoLang === "yue" ? " on" : ""}" data-act="lang-yue" style="flex:1 1 140px;max-width:200px">粵語</button>
           <button type="button" class="btn${state.echoLang === "en" ? " on" : ""}" data-act="lang-en" style="flex:1 1 140px;max-width:200px">English</button>
         </div>`;
-      } else {
-        head = `<div class="hint-text">撳圖裡面任何地方，都可以聽同玩</div>`;
-      }
-      let phase = "";
-      if (state.mode === "echo" && state.echoPhase === "repeat") {
-        const wave = state.micStatus === "on"
-          ? `<div class="wave" id="wave">${waveScale.map((h) => `<span style="height:${Math.max(8, Math.round(8 + h * state.level * 28))}px"></span>`).join("")}</div>`
-          : "";
-        let hint;
-        if (state.micStatus === "on") hint = "讀完會自動聽返你；亦可以撳「我讀完喇」";
-        else if (!window.isSecureContext) hint = "請用 Chrome 打開呢個網頁，先可以開咪高峰。而家可以撳「我讀完喇」。";
-        else hint = "開唔到咪高峰，讀完請撳「我讀完喇」。亦可撳「再開咪」。";
-        const retry = state.micStatus !== "on" && window.isSecureContext
-          ? `<button type="button" class="btn" data-act="retry-mic" style="min-height:44px;font-size:16px">再開咪</button>`
-          : "";
-        phase = `<div class="center" style="gap:8px"><div class="phase">而家你讀</div>${wave}<div class="hint-text">${hint}</div>${retry}</div>`;
-      } else if (state.mode === "echo" && state.echoPhase === "replay") {
-        phase = `<div class="phase">聽返你自己</div>`;
-      } else if (state.mode === "echo" && state.echoPhase === "praise") {
-        phase = `<div class="phase big">好棒！</div>`;
-      }
+    } else {
+      head = `<div class="hint-text">撳圖裡面任何地方，都可以聽同玩</div>`;
+    }
+    let phase = "";
+    if (state.mode === "echo" && state.echoPhase === "repeat") {
+      const wave = state.micStatus === "on"
+        ? `<div class="wave" id="wave">${waveScale.map((h) => `<span style="height:${Math.max(8, Math.round(8 + h * state.level * 28))}px"></span>`).join("")}</div>`
+        : "";
+      let hint;
+      if (state.micStatus === "on") hint = "讀完會自動聽返你；亦可以撳「我讀完喇」";
+      else if (!window.isSecureContext) hint = "請用 Chrome 打開呢個網頁，先可以開咪高峰。而家可以撳「我讀完喇」。";
+      else hint = "開唔到咪高峰，讀完請撳「我讀完喇」。亦可撳「再開咪」。";
+      const retry = state.micStatus !== "on" && window.isSecureContext
+        ? `<button type="button" class="btn" data-act="retry-mic" style="min-height:44px;font-size:16px">再開咪</button>`
+        : "";
+      phase = `<div class="center" style="gap:8px"><div class="phase">而家你讀</div>${wave}<div class="hint-text">${hint}</div>${retry}</div>`;
+    } else if (state.mode === "echo" && state.echoPhase === "replay") {
+      phase = `<div class="phase">聽返你自己</div>`;
+    } else if (state.mode === "echo" && state.echoPhase === "praise") {
+      phase = `<div class="phase big">好棒！</div>`;
+    }
 
-      let actions = "";
-      if (state.mode === "listen") {
-        actions = `<div class="row">
+    let actions = "";
+    if (state.mode === "listen") {
+      actions = `<div class="row">
           <button type="button" class="btn${state.playing === "yue" ? " on" : ""}" data-act="speak-yue" style="flex:1 1 140px;max-width:200px">粵語</button>
           <button type="button" class="btn${state.playing === "en" ? " on" : ""}" data-act="speak-en" style="flex:1 1 140px;max-width:200px">English</button>
         </div>`;
-      }
-      if (state.mode === "echo" && state.echoPhase === "repeat") {
-        actions += `<div class="row">
+    }
+    if (state.mode === "echo" && state.echoPhase === "repeat") {
+      actions += `<div class="row">
           <button type="button" class="btn" data-act="replay-model" style="flex:1 1 140px;max-width:200px">再聽一次</button>
           <button type="button" class="btn primary" data-act="done" style="flex:1 1 140px;max-width:220px">我讀完喇</button>
         </div>`;
-      }
-      if (state.mode === "echo" && state.echoPhase === "praise") {
-        actions += `<div class="row">
+    }
+    if (state.mode === "echo" && state.echoPhase === "praise") {
+      actions += `<div class="row">
           ${state.hasClip ? `<button type="button" class="btn${state.playing === "clip" ? " on" : ""}" data-act="play-clip" style="flex:1 1 140px;max-width:200px">聽返自己</button>` : ""}
           <button type="button" class="btn" data-act="replay-model" style="flex:1 1 140px;max-width:200px">再聽一次</button>
           ${last
             ? `<button type="button" class="btn primary" data-act="echo-again" style="flex:1 1 140px;max-width:220px">再讀一次</button>`
             : `<button type="button" class="btn primary" data-act="next" style="flex:1 1 140px;max-width:220px">下一頁</button>`}
         </div>`;
-      }
-      if (state.mode === "listen" && last) {
-        actions += `<div class="row"><button type="button" class="btn primary" data-act="listen-again">再睇一次</button></div>`;
-      }
+    }
+    if (state.mode === "listen" && last) {
+      actions += `<div class="row"><button type="button" class="btn primary" data-act="listen-again">再睇一次</button></div>`;
+    }
 
-      const dots = pages.slice(1).map((_, i) => `<i class="${i + 1 === state.index ? "cur" : ""}"></i>`).join("");
-      mid = `<div class="panel">${head}${phase}${lines}${actions}
+    const dots = pages.slice(1).map((_, i) => `<i class="${i + 1 === state.index ? "cur" : ""}"></i>`).join("");
+    return `<div class="panel">${head}${phase}${lines}${actions}
         <div class="row">
           <button type="button" class="btn nav" data-act="prev" ${state.index <= 1 ? "disabled" : ""}>‹</button>
           <div class="dots">${dots}</div>
@@ -674,14 +699,31 @@
         </div>
         <div class="row"><button type="button" class="btn" data-act="cover" style="min-height:44px;font-size:16px">封面</button></div>
       </div>`;
-    }
+  }
 
-    document.getElementById("app").innerHTML = `
-      <div class="stage-wrap" id="stage">
+  function render() {
+    const page = pages[state.index];
+    const appEl = document.getElementById("app");
+    const stage = document.getElementById("stage");
+    const samePage = stage && stage.getAttribute("data-index") === String(state.index);
+    const mid = panelHTML();
+
+    if (!samePage) {
+      const stageHtml = `<div class="stage-wrap enter" id="stage" data-index="${state.index}">
         <img src="${esc(page.img)}" alt="${esc(page.alt)}" draggable="false">
-        ${fx}${spots}
-      </div>
-      ${mid}`;
+        ${overlayHTML(page)}
+      </div>`;
+      const panel = document.getElementById("panel");
+      if (stage && panel) {
+        stage.outerHTML = stageHtml;
+        panel.innerHTML = mid;
+      } else {
+        appEl.innerHTML = `${stageHtml}<div id="panel">${mid}</div>`;
+      }
+    } else {
+      document.getElementById("panel").innerHTML = mid;
+    }
+    syncSpotUi();
   }
 
   const app = document.getElementById("app");
