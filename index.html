@@ -28,6 +28,7 @@
     #app.reading .stage-wrap { width: min(100%, calc((100dvh - 270px) * 4 / 3)); }
     .stage-wrap.enter { animation: pagein .35s ease-out; }
     .stage-wrap img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; pointer-events: none; user-select: none; }
+    .stage-wrap.card-art img { transform: none; animation: none; }
     .fx, .spot { position: absolute; }
     .spot { background: transparent; border: 0; padding: 0; cursor: pointer; border-radius: 18px; z-index: 2; }
     .spot.lit { z-index: 6; box-shadow: 0 0 0 4px #fff, 0 0 0 10px rgba(47,111,143,.9), 0 0 0 9999px rgba(30,18,10,.45); }
@@ -99,6 +100,7 @@
 </head>
 <body>
   <div id="app"></div>
+  <script src="cards-data.js"></script>
   <script>
 (function () {
   const pages = [
@@ -262,52 +264,7 @@
       { d: ".", s: "." }
     ]}
   ];
-  const CARDS = [
-    { id: "bear", img: "images/cover.jpg", spotId: "cover-bear",
-      zh: { d: "小熊", s: "小熊", t: "Little Bear", p: "siu · hung" },
-      en: { d: "Little Bear", s: "Little Bear", t: "小熊", p: "li · tuhl · bair" },
-      aliases: ["bear", "熊", "熊熊"] },
-    { id: "park", img: "images/cover.jpg", spotId: null,
-      zh: { d: "公園", s: "公園", t: "the Park", p: "gung · yun" },
-      en: { d: "the Park", s: "the Park", t: "公園", p: "thuh · park" },
-      aliases: ["park", "花園"] },
-    { id: "scarf", img: "images/cover.jpg", spotId: "cover-scarf",
-      zh: { d: "頸巾", s: "頸巾", t: "a scarf", p: "geng · gan" },
-      en: { d: "a scarf", s: "a scarf", t: "頸巾", p: "uh · skarf" },
-      aliases: ["scarf", "圍巾", "颈巾"] },
-    { id: "flowers", img: "images/cover.jpg", spotId: "cover-flowers-l",
-      zh: { d: "花", s: "花", t: "flowers", p: "faa" },
-      en: { d: "flowers", s: "flowers", t: "花", p: "flou · erz" },
-      aliases: ["flower", "花兒"] },
-    { id: "morning", img: "images/wake.jpg", spotId: null,
-      zh: { d: "早晨", s: "早晨", t: "Morning", p: "jou · san" },
-      en: { d: "Morning", s: "Morning", t: "早晨", p: "mor · ning" },
-      aliases: ["morning"] },
-    { id: "door", img: "images/door.jpg", spotId: "door-door",
-      zh: { d: "門", s: "門", t: "door", p: "mun" },
-      en: { d: "door", s: "door", t: "門", p: "dor" },
-      aliases: ["门"] },
-    { id: "tree", img: "images/tree.jpg", spotId: "tree-tree",
-      zh: { d: "大樹", s: "大樹", t: "a big tree", p: "daai · syu" },
-      en: { d: "a big tree", s: "a big tree", t: "大樹", p: "uh · big · tree" },
-      aliases: ["tree", "樹", "trees"] },
-    { id: "bird", img: "images/bird.jpg", spotId: "bird-bird",
-      zh: { d: "小鳥", s: "小鳥", t: "a little bird", p: "siu · niu" },
-      en: { d: "a little bird", s: "a little bird", t: "小鳥", p: "uh · li · tuhl · burd" },
-      aliases: ["bird", "鳥", "小鸟"] },
-    { id: "ball", img: "images/play.jpg", spotId: "play-ball",
-      zh: { d: "波", s: "波", t: "a ball", p: "bo" },
-      en: { d: "a ball", s: "a ball", t: "波", p: "uh · baul" },
-      aliases: ["ball", "球", "皮球"] },
-    { id: "sun", img: "images/sunset.jpg", spotId: "sunset-sun",
-      zh: { d: "太陽", s: "太陽", t: "the sun", p: "taai · yeung" },
-      en: { d: "the sun", s: "the sun", t: "太陽", p: "thuh · sun" },
-      aliases: ["sun", "太阳"] },
-    { id: "night", img: "images/night.jpg", spotId: null,
-      zh: { d: "晚安", s: "晚安", t: "Good night", p: "maan · on" },
-      en: { d: "Good night", s: "Good night", t: "晚安", p: "good · night" },
-      aliases: ["goodnight", "night"] }
-  ];
+  const CARDS = window.LBP_CARDS;
   const petals = [
     { left: 8, delay: 0, color: "#f4b4c8", size: 10 },
     { left: 22, delay: 1200, color: "#fff6e8", size: 8 },
@@ -449,7 +406,9 @@
     mouthSyls: [],
     mouthStep: 0,
     recog: null,
-    cardTimer: 0
+    cardTimer: 0,
+    cardStageImg: null,
+    cardStageAlt: ""
   };
 
   function isEn() { return state.bookLang === "en"; }
@@ -1038,6 +997,45 @@
     const i = pages.findIndex((p) => p.img === img);
     return i < 0 ? 0 : i;
   }
+  function isBookImg(img) {
+    return pages.some((p) => p.img === img);
+  }
+  function cardUsesBookArt(card) {
+    return !!(card && card.img && isBookImg(card.img));
+  }
+  function clearCardStageArt() {
+    refs.cardStageImg = null;
+    refs.cardStageAlt = "";
+  }
+  function setCardStageArt(card, tok) {
+    if (card && !cardUsesBookArt(card)) {
+      refs.cardStageImg = card.img;
+      refs.cardStageAlt = tok && tok.d ? tok.d : card.id;
+    } else {
+      clearCardStageArt();
+    }
+  }
+  function stageKey() {
+    if (state.mode === "cards" && refs.cardStageImg) return "art:" + refs.cardStageImg;
+    return "page:" + state.index;
+  }
+  function otherCardExact(n, lang, exceptId) {
+    for (let i = 0; i < CARDS.length; i++) {
+      const c = CARDS[i];
+      if (c.id === exceptId) continue;
+      const side = lang === "en" ? c.en : c.zh;
+      const raws = [side.d, side.s].concat(c.aliases || []);
+      for (let k = 0; k < raws.length; k++) {
+        const target = normAns(raws[k], lang);
+        if (target && target === n) return true;
+        if (lang === "en") {
+          const core = normAns(dropArts(raws[k]), "en");
+          if (core && core === n) return true;
+        }
+      }
+    }
+    return false;
+  }
   function normAns(s, lang) {
     let t = String(s == null ? "" : s);
     if (lang === "en") t = t.toLowerCase();
@@ -1082,14 +1080,26 @@
       const raw = transcripts[i];
       const n = normAns(raw, lang);
       if (!n) continue;
+      let exactThis = false;
       for (let k = 0; k < norms.length; k++) {
-        if (n.indexOf(norms[k]) !== -1) return true;
+        if (n === norms[k]) { exactThis = true; break; }
+      }
+      if (!exactThis && lang === "en") {
+        const dropped0 = normAns(dropArts(raw), "en");
+        for (let k = 0; k < cores.length; k++) {
+          if (n === cores[k] || dropped0 === cores[k]) { exactThis = true; break; }
+        }
+      }
+      const otherExact = !exactThis && otherCardExact(n, lang, card.id);
+      for (let k = 0; k < norms.length; k++) {
+        if (n === norms[k]) return true;
+        if (!otherExact && n.indexOf(norms[k]) !== -1) return true;
       }
       if (lang === "en") {
         const dropped = normAns(dropArts(raw), "en");
         for (let k = 0; k < cores.length; k++) {
-          if (n.indexOf(cores[k]) !== -1) return true;
-          if (dropped && dropped.indexOf(cores[k]) !== -1) return true;
+          if (!otherExact && n.indexOf(cores[k]) !== -1) return true;
+          if (!otherExact && dropped && dropped.indexOf(cores[k]) !== -1) return true;
         }
         const pool = norms.concat(cores);
         for (let k = 0; k < pool.length; k++) {
@@ -1203,6 +1213,7 @@
   function resetCardState() {
     stopRecognition();
     clearCardTimer();
+    clearCardStageArt();
     state.cardId = null;
     state.cardQueue = [];
     state.cardPos = 0;
@@ -1223,10 +1234,12 @@
     const id = state.cardQueue[pos];
     const card = CARDS.find((c) => c.id === id);
     if (!card) return;
-    const index = pageIndexForImg(card.img);
+    const book = cardUsesBookArt(card);
+    const index = book ? pageIndexForImg(card.img) : state.index;
     const tok = cardToken(card);
     clearWordUi(false);
     if (refs.spotTimer) { clearTimeout(refs.spotTimer); refs.spotTimer = 0; }
+    setCardStageArt(card, tok);
     set({
       mode: "cards",
       index: index,
@@ -1235,8 +1248,8 @@
       cardPhase: "idle",
       lastHeard: "",
       cardErr: "",
-      popped: card.spotId || null,
-      label: card.spotId ? { id: card.spotId, text: tok.d } : null,
+      popped: book && card.spotId ? card.spotId : null,
+      label: book && card.spotId ? { id: card.spotId, text: tok.d } : null,
       spotTok: tok,
       micStatus: "off",
       hasClip: false
@@ -1256,6 +1269,7 @@
     clearSpot(true);
     const queue = buildCardQueue(!!practiceAll);
     if (!queue.length) {
+      clearCardStageArt();
       set({
         mode: "cards",
         index: 0,
@@ -1381,7 +1395,7 @@
     if (refs.spotTimer) { clearTimeout(refs.spotTimer); refs.spotTimer = 0; }
     const tok = cardToken(card);
     state.spotTok = tok;
-    if (card.spotId) {
+    if (cardUsesBookArt(card) && card.spotId) {
       state.popped = card.spotId;
       state.label = { id: card.spotId, text: tok.d };
     } else {
@@ -1434,7 +1448,8 @@
   function onStageClick() {
     if (refs.swiped) { refs.swiped = false; return; }
     const el = document.getElementById("stage");
-    if (el && el.animate) {
+    const standalone = state.mode === "cards" && !!refs.cardStageImg;
+    if (el && el.animate && !standalone) {
       el.animate([{ transform: "scale(1)" }, { transform: "scale(1.02)" }, { transform: "scale(1)" }], { duration: 420, easing: "ease-out" });
     }
     if (state.mode === "cards") return;
@@ -1476,6 +1491,7 @@
   function syncSpotUi() {
     const stage = document.getElementById("stage");
     if (!stage) return;
+    if (state.mode === "cards" && refs.cardStageImg) return;
     const page = pages[state.index];
     stage.querySelectorAll("[data-spot]").forEach((btn) => {
       const id = btn.getAttribute("data-spot");
@@ -1709,12 +1725,18 @@
     const page = pages[state.index];
     const appEl = document.getElementById("app");
     const stage = document.getElementById("stage");
-    const samePage = stage && stage.getAttribute("data-index") === String(state.index);
+    const key = stageKey();
+    const samePage = stage && stage.getAttribute("data-stage") === key;
     const mid = panelHTML();
     appEl.className = (page.cover && state.mode !== "cards") ? "cover" : "reading";
 
     if (!samePage) {
-      const stageHtml = `<div class="stage-wrap enter" id="stage" data-index="${state.index}">
+      const art = state.mode === "cards" && refs.cardStageImg;
+      const stageHtml = art
+        ? `<div class="stage-wrap enter card-art" id="stage" data-stage="${esc(key)}">
+        <img src="${esc(refs.cardStageImg)}" alt="${esc(refs.cardStageAlt || "")}" draggable="false">
+      </div>`
+        : `<div class="stage-wrap enter" id="stage" data-stage="${esc(key)}" data-index="${state.index}">
         <img src="${esc(page.img)}" alt="${esc(page.alt)}" draggable="false">
         ${overlayHTML(page)}
       </div>`;

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<defs>
+  <linearGradient id="skyDay" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#eaf3fb"/>
+    <stop offset="55%" stop-color="#d4e7f6"/>
+    <stop offset="100%" stop-color="#dcefe6"/>
+  </linearGradient>
+  <linearGradient id="skyWarm" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f8ead0"/>
+    <stop offset="50%" stop-color="#fbf6ea"/>
+    <stop offset="100%" stop-color="#e8dcc0"/>
+  </linearGradient>
+  <linearGradient id="skyNight" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#6e86b4"/>
+    <stop offset="100%" stop-color="#c9d6ee"/>
+  </linearGradient>
+  <linearGradient id="skyStudio" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f4f0e6"/>
+    <stop offset="100%" stop-color="#e7efe6"/>
+  </linearGradient>
+  <linearGradient id="skyPeach" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f8e6dc"/>
+    <stop offset="100%" stop-color="#f3efe4"/>
+  </linearGradient>
+  <linearGradient id="skyWater" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#cfe8f6"/>
+    <stop offset="70%" stop-color="#b7ddea"/>
+    <stop offset="100%" stop-color="#dcefe4"/>
+  </linearGradient>
+  <linearGradient id="skyDusk" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f3c9a0"/>
+    <stop offset="55%" stop-color="#f6dfc0"/>
+    <stop offset="100%" stop-color="#c9d6b0"/>
+  </linearGradient>
+  <filter id="wash" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="14"/>
+  </filter>
+  <filter id="soft" x="-15%" y="-15%" width="130%" height="130%">
+    <feGaussianBlur stdDeviation="6"/>
+  </filter>
+  <filter id="fuzz" x="-8%" y="-8%" width="116%" height="116%">
+    <feGaussianBlur stdDeviation="1.1"/>
+  </filter>
+  <filter id="shad" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="10"/>
+  </filter>
+</defs>
+<rect x="0" y="0" width="800" height="600" fill="url(#skyWarm)"/>
+<ellipse cx="200" cy="70" rx="260" ry="130" fill="#fff6e0" opacity=".65" filter="url(#wash)"/>
+<ellipse cx="640" cy="180" rx="220" ry="150" fill="#f0d8b0" opacity=".4" filter="url(#wash)"/>
+<ellipse cx="400" cy="530" rx="400" ry="150" fill="#e2d0a8" opacity=".35" filter="url(#wash)"/>
+<rect x="0" y="0" width="800" height="600" fill="none" stroke="#e6d8c4" stroke-width="18" opacity=".35"/>
+<ellipse cx="400" cy="510" rx="160" ry="22" fill="#6a503c" opacity=".28" filter="url(#shad)"/>
+<circle cx="400" cy="320" r="160" fill="#e8b86a" stroke="#8a6a4e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="400" cy="320" r="130" fill="#f0d08a" opacity=".5"/>
+<circle cx="555" cy="320" r="18" fill="#e8b86a"/>
+<circle cx="545.65" cy="373.01" r="18" fill="#e8b86a"/>
+<circle cx="518.74" cy="419.63" r="18" fill="#e8b86a"/>
+<circle cx="477.5" cy="454.23" r="18" fill="#e8b86a"/>
+<circle cx="426.92" cy="472.65" r="18" fill="#e8b86a"/>
+<circle cx="373.08" cy="472.65" r="18" fill="#e8b86a"/>
+<circle cx="322.5" cy="454.23" r="18" fill="#e8b86a"/>
+<circle cx="281.26" cy="419.63" r="18" fill="#e8b86a"/>
+<circle cx="254.35" cy="373.01" r="18" fill="#e8b86a"/>
+<circle cx="245" cy="320" r="18" fill="#e8b86a"/>
+<circle cx="254.35" cy="266.99" r="18" fill="#e8b86a"/>
+<circle cx="281.26" cy="220.37" r="18" fill="#e8b86a"/>
+<circle cx="322.5" cy="185.77" r="18" fill="#e8b86a"/>
+<circle cx="373.08" cy="167.35" r="18" fill="#e8b86a"/>
+<circle cx="426.92" cy="167.35" r="18" fill="#e8b86a"/>
+<circle cx="477.5" cy="185.77" r="18" fill="#e8b86a"/>
+<circle cx="518.74" cy="220.37" r="18" fill="#e8b86a"/>
+<circle cx="545.65" cy="266.99" r="18" fill="#e8b86a"/>
+<circle cx="400" cy="320" r="120" fill="#f0c878" stroke="#8a6a4e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="360" cy="300" r="8" fill="#c48a50" opacity=".7"/>
+<circle cx="440" cy="300" r="8" fill="#c48a50" opacity=".7"/>
+<circle cx="400" cy="250" r="8" fill="#c48a50" opacity=".7"/>
+<circle cx="400" cy="350" r="8" fill="#c48a50" opacity=".7"/>
+<circle cx="340" cy="360" r="8" fill="#c48a50" opacity=".7"/>
+<circle cx="460" cy="360" r="8" fill="#c48a50" opacity=".7"/>
+<circle cx="340" cy="250" r="8" fill="#c48a50" opacity=".7"/>
+<circle cx="460" cy="250" r="8" fill="#c48a50" opacity=".7"/>
+</svg>

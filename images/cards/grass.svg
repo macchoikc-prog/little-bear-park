@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<defs>
+  <linearGradient id="skyDay" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#eaf3fb"/>
+    <stop offset="55%" stop-color="#d4e7f6"/>
+    <stop offset="100%" stop-color="#dcefe6"/>
+  </linearGradient>
+  <linearGradient id="skyWarm" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f8ead0"/>
+    <stop offset="50%" stop-color="#fbf6ea"/>
+    <stop offset="100%" stop-color="#e8dcc0"/>
+  </linearGradient>
+  <linearGradient id="skyNight" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#6e86b4"/>
+    <stop offset="100%" stop-color="#c9d6ee"/>
+  </linearGradient>
+  <linearGradient id="skyStudio" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f4f0e6"/>
+    <stop offset="100%" stop-color="#e7efe6"/>
+  </linearGradient>
+  <linearGradient id="skyPeach" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f8e6dc"/>
+    <stop offset="100%" stop-color="#f3efe4"/>
+  </linearGradient>
+  <linearGradient id="skyWater" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#cfe8f6"/>
+    <stop offset="70%" stop-color="#b7ddea"/>
+    <stop offset="100%" stop-color="#dcefe4"/>
+  </linearGradient>
+  <linearGradient id="skyDusk" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f3c9a0"/>
+    <stop offset="55%" stop-color="#f6dfc0"/>
+    <stop offset="100%" stop-color="#c9d6b0"/>
+  </linearGradient>
+  <filter id="wash" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="14"/>
+  </filter>
+  <filter id="soft" x="-15%" y="-15%" width="130%" height="130%">
+    <feGaussianBlur stdDeviation="6"/>
+  </filter>
+  <filter id="fuzz" x="-8%" y="-8%" width="116%" height="116%">
+    <feGaussianBlur stdDeviation="1.1"/>
+  </filter>
+  <filter id="shad" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="10"/>
+  </filter>
+</defs>
+<rect x="0" y="0" width="800" height="600" fill="url(#skyDay)"/>
+<ellipse cx="180" cy="70" rx="250" ry="130" fill="#ffffff" opacity=".5" filter="url(#wash)"/>
+<ellipse cx="640" cy="120" rx="230" ry="150" fill="#c5dff0" opacity=".45" filter="url(#wash)"/>
+<ellipse cx="400" cy="540" rx="420" ry="160" fill="#c8e0c0" opacity=".4" filter="url(#wash)"/>
+<rect x="0" y="0" width="800" height="600" fill="none" stroke="#e6d8c4" stroke-width="18" opacity=".35"/>
+<path d="M-20 500 C 160 430 300 470 400 460 C 560 445 680 490 820 480 L 820 620 L -20 620 Z" fill="#c8e0b0" opacity=".9" filter="url(#fuzz)"/>
+<path d="M 40 520 Q 50 280 43.0 260" fill="none" stroke="#6fa066" stroke-width="7" stroke-linecap="round"/>
+<path d="M 58 520 Q 68 246 61.0 226" fill="none" stroke="#7cbc6e" stroke-width="11" stroke-linecap="round"/>
+<path d="M 76 520 Q 36 192 64.0 172" fill="none" stroke="#6fa066" stroke-width="6" stroke-linecap="round"/>
+<path d="M 94 520 Q 114 220 100.0 200" fill="none" stroke="#6fa066" stroke-width="7" stroke-linecap="round"/>
+<path d="M 112 520 Q 152 291 124.0 271" fill="none" stroke="#6fa066" stroke-width="12" stroke-linecap="round"/>
+<path d="M 130 520 Q 170 200 142.0 180" fill="none" stroke="#7cbc6e" stroke-width="11" stroke-linecap="round"/>
+<path d="M 148 520 Q 128 302 142.0 282" fill="none" stroke="#6fa066" stroke-width="7" stroke-linecap="round"/>
+<path d="M 166 520 Q 206 207 178.0 187" fill="none" stroke="#6fa066" stroke-width="6" stroke-linecap="round"/>
+<path d="M 184 520 Q 164 324 178.0 304" fill="none" stroke="#6fa066" stroke-width="6" stroke-linecap="round"/>
+<path d="M 202 520 Q 162 263 190.0 243" fill="none" stroke="#7cbc6e" stroke-width="9" stroke-linecap="round"/>
+<path d="M 220 520 Q 260 188 232.0 168" fill="none" stroke="#6fa066" stroke-width="12" stroke-linecap="round"/>
+<path d="M 238 520 Q 278 231 250.0 211" fill="none" stroke="#6fa066" stroke-width="12" stroke-linecap="round"/>
+<path d="M 256 520 Q 296 193 268.0 173" fill="none" stroke="#5a9a58" stroke-width="8" stroke-linecap="round"/>
+<path d="M 274 520 Q 234 316 262.0 296" fill="none" stroke="#5a9a58" stroke-width="9" stroke-linecap="round"/>
+<path d="M 292 520 Q 312 285 298.0 265" fill="none" stroke="#6fa066" stroke-width="9" stroke-linecap="round"/>
+<path d="M 310 520 Q 330 180 316.0 160" fill="none" stroke="#7cbc6e" stroke-width="10" stroke-linecap="round"/>
+<path d="M 328 520 Q 338 242 331.0 222" fill="none" stroke="#7cbc6e" stroke-width="10" stroke-linecap="round"/>
+<path d="M 346 520 Q 386 191 358.0 171" fill="none" stroke="#6fa066" stroke-width="7" stroke-linecap="round"/>
+<path d="M 364 520 Q 324 254 352.0 234" fill="none" stroke="#7cbc6e" stroke-width="10" stroke-linecap="round"/>
+<path d="M 382 520 Q 402 299 388.0 279" fill="none" stroke="#6fa066" stroke-width="10" stroke-linecap="round"/>
+<path d="M 400 520 Q 360 195 388.0 175" fill="none" stroke="#6fa066" stroke-width="11" stroke-linecap="round"/>
+<path d="M 418 520 Q 428 286 421.0 266" fill="none" stroke="#7cbc6e" stroke-width="8" stroke-linecap="round"/>
+<path d="M 436 520 Q 396 309 424.0 289" fill="none" stroke="#7cbc6e" stroke-width="12" stroke-linecap="round"/>
+<path d="M 454 520 Q 414 217 442.0 197" fill="none" stroke="#7cbc6e" stroke-width="12" stroke-linecap="round"/>
+<path d="M 472 520 Q 512 323 484.0 303" fill="none" stroke="#5a9a58" stroke-width="6" stroke-linecap="round"/>
+<path d="M 490 520 Q 530 265 502.0 245" fill="none" stroke="#7cbc6e" stroke-width="12" stroke-linecap="round"/>
+<path d="M 508 520 Q 468 310 496.0 290" fill="none" stroke="#6fa066" stroke-width="10" stroke-linecap="round"/>
+<path d="M 526 520 Q 566 329 538.0 309" fill="none" stroke="#6fa066" stroke-width="10" stroke-linecap="round"/>
+<path d="M 544 520 Q 554 256 547.0 236" fill="none" stroke="#7cbc6e" stroke-width="10" stroke-linecap="round"/>
+<path d="M 562 520 Q 522 280 550.0 260" fill="none" stroke="#7cbc6e" stroke-width="6" stroke-linecap="round"/>
+<path d="M 580 520 Q 540 321 568.0 301" fill="none" stroke="#6fa066" stroke-width="10" stroke-linecap="round"/>
+<path d="M 598 520 Q 578 332 592.0 312" fill="none" stroke="#7cbc6e" stroke-width="8" stroke-linecap="round"/>
+<path d="M 616 520 Q 636 184 622.0 164" fill="none" stroke="#5a9a58" stroke-width="11" stroke-linecap="round"/>
+<path d="M 634 520 Q 654 330 640.0 310" fill="none" stroke="#7cbc6e" stroke-width="8" stroke-linecap="round"/>
+<path d="M 652 520 Q 692 305 664.0 285" fill="none" stroke="#7cbc6e" stroke-width="9" stroke-linecap="round"/>
+<path d="M 670 520 Q 710 207 682.0 187" fill="none" stroke="#6fa066" stroke-width="12" stroke-linecap="round"/>
+<path d="M 688 520 Q 698 188 691.0 168" fill="none" stroke="#5a9a58" stroke-width="10" stroke-linecap="round"/>
+<path d="M 706 520 Q 726 211 712.0 191" fill="none" stroke="#7cbc6e" stroke-width="11" stroke-linecap="round"/>
+<path d="M 724 520 Q 744 280 730.0 260" fill="none" stroke="#7cbc6e" stroke-width="8" stroke-linecap="round"/>
+<path d="M 742 520 Q 762 207 748.0 187" fill="none" stroke="#6fa066" stroke-width="8" stroke-linecap="round"/>
+</svg>
