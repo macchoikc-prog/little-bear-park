@@ -70,6 +70,10 @@
     .btn.on { border: 2px solid var(--blue); }
     .btn.primary { min-width: 180px; background: var(--blue); color: #fff; border: 0; }
     .btn.teal { background: var(--teal); color: #fff; border: 0; min-width: 180px; }
+    .btn.gold { background: #8a5a16; color: #fff; border: 0; min-width: 180px; }
+    .card-word { font-size: 42px; font-weight: 800; line-height: 1.15; text-align: center; }
+    .card-progress { font-size: 18px; font-weight: 700; color: var(--muted); }
+    .card-heard { font-size: 14px; font-weight: 700; color: var(--muted); text-align: center; }
     .btn.nav { width: 56px; height: 56px; padding: 0; font-size: 28px; min-height: 56px; }
     .wave { display: flex; align-items: flex-end; justify-content: center; gap: 6px; height: 32px; }
     .wave span { width: 8px; border-radius: 999px; background: var(--blue); display: inline-block; }
@@ -258,6 +262,52 @@
       { d: ".", s: "." }
     ]}
   ];
+  const CARDS = [
+    { id: "bear", img: "images/cover.jpg", spotId: "cover-bear",
+      zh: { d: "小熊", s: "小熊", t: "Little Bear", p: "siu · hung" },
+      en: { d: "Little Bear", s: "Little Bear", t: "小熊", p: "li · tuhl · bair" },
+      aliases: ["bear", "熊", "熊熊"] },
+    { id: "park", img: "images/cover.jpg", spotId: null,
+      zh: { d: "公園", s: "公園", t: "the Park", p: "gung · yun" },
+      en: { d: "the Park", s: "the Park", t: "公園", p: "thuh · park" },
+      aliases: ["park", "花園"] },
+    { id: "scarf", img: "images/cover.jpg", spotId: "cover-scarf",
+      zh: { d: "頸巾", s: "頸巾", t: "a scarf", p: "geng · gan" },
+      en: { d: "a scarf", s: "a scarf", t: "頸巾", p: "uh · skarf" },
+      aliases: ["scarf", "圍巾", "颈巾"] },
+    { id: "flowers", img: "images/cover.jpg", spotId: "cover-flowers-l",
+      zh: { d: "花", s: "花", t: "flowers", p: "faa" },
+      en: { d: "flowers", s: "flowers", t: "花", p: "flou · erz" },
+      aliases: ["flower", "花兒"] },
+    { id: "morning", img: "images/wake.jpg", spotId: null,
+      zh: { d: "早晨", s: "早晨", t: "Morning", p: "jou · san" },
+      en: { d: "Morning", s: "Morning", t: "早晨", p: "mor · ning" },
+      aliases: ["morning"] },
+    { id: "door", img: "images/door.jpg", spotId: "door-door",
+      zh: { d: "門", s: "門", t: "door", p: "mun" },
+      en: { d: "door", s: "door", t: "門", p: "dor" },
+      aliases: ["门"] },
+    { id: "tree", img: "images/tree.jpg", spotId: "tree-tree",
+      zh: { d: "大樹", s: "大樹", t: "a big tree", p: "daai · syu" },
+      en: { d: "a big tree", s: "a big tree", t: "大樹", p: "uh · big · tree" },
+      aliases: ["tree", "樹", "trees"] },
+    { id: "bird", img: "images/bird.jpg", spotId: "bird-bird",
+      zh: { d: "小鳥", s: "小鳥", t: "a little bird", p: "siu · niu" },
+      en: { d: "a little bird", s: "a little bird", t: "小鳥", p: "uh · li · tuhl · burd" },
+      aliases: ["bird", "鳥", "小鸟"] },
+    { id: "ball", img: "images/play.jpg", spotId: "play-ball",
+      zh: { d: "波", s: "波", t: "a ball", p: "bo" },
+      en: { d: "a ball", s: "a ball", t: "波", p: "uh · baul" },
+      aliases: ["ball", "球", "皮球"] },
+    { id: "sun", img: "images/sunset.jpg", spotId: "sunset-sun",
+      zh: { d: "太陽", s: "太陽", t: "the sun", p: "taai · yeung" },
+      en: { d: "the sun", s: "the sun", t: "太陽", p: "thuh · sun" },
+      aliases: ["sun", "太阳"] },
+    { id: "night", img: "images/night.jpg", spotId: null,
+      zh: { d: "晚安", s: "晚安", t: "Good night", p: "maan · on" },
+      en: { d: "Good night", s: "Good night", t: "晚安", p: "good · night" },
+      aliases: ["goodnight", "night"] }
+  ];
   const petals = [
     { left: 8, delay: 0, color: "#f4b4c8", size: 10 },
     { left: 22, delay: 1200, color: "#fff6e8", size: 8 },
@@ -368,7 +418,13 @@
     wordPop: -1,
     wordTip: -1,
     spotTok: null,
-    mouth: "rest"
+    mouth: "rest",
+    cardId: null,
+    cardQueue: [],
+    cardPos: 0,
+    cardPhase: "idle",
+    lastHeard: "",
+    cardErr: ""
   };
 
   const refs = {
@@ -391,7 +447,9 @@
     spotTimer: 0,
     mouthList: [],
     mouthSyls: [],
-    mouthStep: 0
+    mouthStep: 0,
+    recog: null,
+    cardTimer: 0
   };
 
   function isEn() { return state.bookLang === "en"; }
@@ -432,6 +490,10 @@
     return { d: spot.yue, s: spot.yue, t: spot.en, p: lex.py || spot.yue };
   }
   function dockTip() {
+    if (state.mode === "cards") {
+      const card = currentCard();
+      if (card) return cardToken(card);
+    }
     if (state.spotTok) return state.spotTok;
     const tokens = pageTokens(pages[state.index]);
     if (state.wordTip >= 0) return tokens[state.wordTip];
@@ -439,6 +501,7 @@
     return null;
   }
   function showDock(tip) {
+    if (state.mode === "cards" && state.cardPhase !== "done") return !!(tip && (tip.t || tip.p));
     return !!(tip && (tip.t || tip.p) && (state.spotTok || state.wordTip >= 0 || state.playing === state.bookLang));
   }
   function pageTokens(page) {
@@ -891,6 +954,7 @@
   }
 
   function go(next) {
+    if (state.mode === "cards") return;
     const started = state.mode !== null;
     const target = Math.max(started ? 1 : 0, Math.min(pages.length - 1, next));
     if (target === state.index) return;
@@ -913,10 +977,11 @@
   async function startBook(nextMode) {
     refs.finishing = true;
     if (refs.raf) { cancelAnimationFrame(refs.raf); refs.raf = 0; }
+    resetCardState();
     clearClip();
     clearWordUi(false);
     clearSpot(true);
-    set({ mode: nextMode, index: 1, popped: null, label: null, spotTok: null, echoPhase: "listen", hasClip: false });
+    set({ mode: nextMode, index: 1, popped: null, label: null, spotTok: null, echoPhase: "listen", hasClip: false, cardId: null, cardQueue: [], cardPos: 0, cardPhase: "idle", lastHeard: "", cardErr: "" });
     if (nextMode === "listen") {
       stopTracks();
       set({ micStatus: "off" }, false);
@@ -929,13 +994,14 @@
 
   function goCover() {
     refs.finishing = true;
+    resetCardState();
     stopSpeak();
     stopListenLoop();
     stopTracks();
     clearClip();
     clearWordUi(false);
     clearSpot(true);
-    set({ mode: null, index: 0, echoPhase: "listen", micStatus: "off", popped: null, label: null, spotTok: null, hasClip: false });
+    set({ mode: null, index: 0, echoPhase: "listen", micStatus: "off", popped: null, label: null, spotTok: null, hasClip: false, cardId: null, cardQueue: [], cardPos: 0, cardPhase: "idle", lastHeard: "", cardErr: "" });
   }
 
   function setBookLang(lang) {
@@ -945,11 +1011,13 @@
   }
 
   function replayModel() {
+    if (state.mode === "cards") { speakCardWord(); return; }
     if (state.mode === "echo") beginEchoPage(state.index);
     else speakPage(0.88);
   }
 
   async function retryMic() {
+    if (state.mode === "cards") { startCardSpeak(); return; }
     refs.micPromise = null;
     stopTracks();
     const ok = await ensureMic();
@@ -957,7 +1025,386 @@
     render();
   }
 
+  function currentCard() {
+    const id = state.cardId;
+    if (!id) return null;
+    return CARDS.find((c) => c.id === id) || null;
+  }
+  function cardToken(card) {
+    const side = isEn() ? card.en : card.zh;
+    return { d: side.d, s: side.s, t: side.t, p: side.p };
+  }
+  function pageIndexForImg(img) {
+    const i = pages.findIndex((p) => p.img === img);
+    return i < 0 ? 0 : i;
+  }
+  function normAns(s, lang) {
+    let t = String(s == null ? "" : s);
+    if (lang === "en") t = t.toLowerCase();
+    return t.replace(/[\s·•・．。，、！？：；,.!?;:'"“”‘’\-_/\\()[\]{}]/g, "");
+  }
+  function dropArts(s) {
+    return String(s || "").toLowerCase().replace(/\b(a|an|the|good)\b/g, " ").replace(/\s+/g, " ").trim();
+  }
+  function levenshtein(a, b) {
+    const m = a.length, n = b.length;
+    if (a === b) return 0;
+    if (!m) return n;
+    if (!n) return m;
+    const prev = [];
+    const cur = [];
+    for (let j = 0; j <= n; j++) prev[j] = j;
+    for (let i = 1; i <= m; i++) {
+      cur[0] = i;
+      for (let j = 1; j <= n; j++) {
+        const cost = a.charCodeAt(i - 1) === b.charCodeAt(j - 1) ? 0 : 1;
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+      }
+      for (let j = 0; j <= n; j++) prev[j] = cur[j];
+    }
+    return prev[n];
+  }
+  function cardAnswerOk(card, lang, transcripts) {
+    if (!transcripts || !transcripts.length) return false;
+    const side = lang === "en" ? card.en : card.zh;
+    const targets = [side.d, side.s].concat(card.aliases || []);
+    const norms = [];
+    const cores = [];
+    targets.forEach((raw) => {
+      const n = normAns(raw, lang);
+      if (n && norms.indexOf(n) < 0) norms.push(n);
+      if (lang === "en") {
+        const c = normAns(dropArts(raw), "en");
+        if (c && cores.indexOf(c) < 0) cores.push(c);
+      }
+    });
+    for (let i = 0; i < transcripts.length; i++) {
+      const raw = transcripts[i];
+      const n = normAns(raw, lang);
+      if (!n) continue;
+      for (let k = 0; k < norms.length; k++) {
+        if (n.indexOf(norms[k]) !== -1) return true;
+      }
+      if (lang === "en") {
+        const dropped = normAns(dropArts(raw), "en");
+        for (let k = 0; k < cores.length; k++) {
+          if (n.indexOf(cores[k]) !== -1) return true;
+          if (dropped && dropped.indexOf(cores[k]) !== -1) return true;
+        }
+        const pool = norms.concat(cores);
+        for (let k = 0; k < pool.length; k++) {
+          const t = pool[k];
+          if (t.length >= 5 && n.length >= 5 && levenshtein(n, t) <= 1) return true;
+        }
+      }
+    }
+    return false;
+  }
+  function emptyCardLang() { return {}; }
+  function loadCardMem() {
+    const blank = { yue: {}, en: {} };
+    try {
+      if (typeof localStorage === "undefined") return blank;
+      const raw = localStorage.getItem("lbp-cards-v1");
+      if (!raw) return blank;
+      const data = JSON.parse(raw);
+      if (!data || typeof data !== "object") return blank;
+      return { yue: cleanCardLang(data.yue), en: cleanCardLang(data.en) };
+    } catch (e) {
+      return blank;
+    }
+  }
+  function cleanCardLang(obj) {
+    const out = {};
+    if (!obj || typeof obj !== "object") return out;
+    Object.keys(obj).forEach((id) => {
+      const row = obj[id];
+      if (!row || typeof row !== "object") return;
+      const level = Math.max(0, Math.min(3, Number(row.level) || 0));
+      out[id] = {
+        level: level,
+        right: Math.max(0, Number(row.right) || 0),
+        wrong: Math.max(0, Number(row.wrong) || 0),
+        last: Number(row.last) || 0
+      };
+    });
+    return out;
+  }
+  function saveCardMem(mem) {
+    try {
+      if (typeof localStorage === "undefined") return;
+      const out = { yue: cleanCardLang(mem.yue), en: cleanCardLang(mem.en) };
+      localStorage.setItem("lbp-cards-v1", JSON.stringify(out));
+    } catch (e) {}
+  }
+  function markCard(id, ok) {
+    const mem = loadCardMem();
+    const lang = isEn() ? "en" : "yue";
+    const row = mem[lang][id] || { level: 0, right: 0, wrong: 0, last: 0 };
+    if (ok) {
+      row.level = Math.min(3, (row.level || 0) + 1);
+      row.right = (row.right || 0) + 1;
+    } else {
+      row.level = Math.max(0, (row.level || 0) - 1);
+      row.wrong = (row.wrong || 0) + 1;
+    }
+    row.last = Date.now();
+    mem[lang][id] = row;
+    saveCardMem(mem);
+  }
+  function shuffleIds(list) {
+    const a = list.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+  function buildCardQueue(practiceAll) {
+    const mem = loadCardMem();
+    const lang = isEn() ? "en" : "yue";
+    const store = mem[lang] || emptyCardLang();
+    const due = [];
+    CARDS.forEach((c) => {
+      const row = store[c.id];
+      const level = row && typeof row.level === "number" ? row.level : 0;
+      if (practiceAll || level < 3) due.push({ id: c.id, level: level });
+    });
+    due.sort((a, b) => a.level - b.level);
+    const groups = [];
+    due.forEach((item) => {
+      const last = groups[groups.length - 1];
+      if (!last || last.level !== item.level) groups.push({ level: item.level, ids: [item.id] });
+      else last.ids.push(item.id);
+    });
+    let ids = [];
+    groups.forEach((g) => { ids = ids.concat(shuffleIds(g.ids)); });
+    if (!practiceAll) ids = ids.slice(0, 8);
+    return ids;
+  }
+  function dueCardsRemain() {
+    const mem = loadCardMem();
+    const lang = isEn() ? "en" : "yue";
+    const store = mem[lang] || emptyCardLang();
+    return CARDS.some((c) => !store[c.id] || store[c.id].level < 3);
+  }
+  function clearCardTimer() {
+    if (refs.cardTimer) { clearTimeout(refs.cardTimer); refs.cardTimer = 0; }
+  }
+  function stopRecognition() {
+    const rec = refs.recog;
+    refs.recog = null;
+    if (!rec) return;
+    try { rec.onresult = null; rec.onerror = null; rec.onend = null; } catch (e) {}
+    try { if (rec.abort) rec.abort(); else rec.stop(); } catch (e) {
+      try { rec.stop(); } catch (e2) {}
+    }
+  }
+  function resetCardState() {
+    stopRecognition();
+    clearCardTimer();
+    state.cardId = null;
+    state.cardQueue = [];
+    state.cardPos = 0;
+    state.cardPhase = "idle";
+    state.lastHeard = "";
+    state.cardErr = "";
+  }
+  function speakCardWord() {
+    const card = currentCard();
+    if (!card) return;
+    const tok = cardToken(card);
+    speak(state.bookLang, tok.s, 0.95);
+    startMouth(tok);
+  }
+  function showCard(pos, play) {
+    stopRecognition();
+    clearCardTimer();
+    const id = state.cardQueue[pos];
+    const card = CARDS.find((c) => c.id === id);
+    if (!card) return;
+    const index = pageIndexForImg(card.img);
+    const tok = cardToken(card);
+    clearWordUi(false);
+    if (refs.spotTimer) { clearTimeout(refs.spotTimer); refs.spotTimer = 0; }
+    set({
+      mode: "cards",
+      index: index,
+      cardId: card.id,
+      cardPos: pos,
+      cardPhase: "idle",
+      lastHeard: "",
+      cardErr: "",
+      popped: card.spotId || null,
+      label: card.spotId ? { id: card.spotId, text: tok.d } : null,
+      spotTok: tok,
+      micStatus: "off",
+      hasClip: false
+    });
+    if (play !== false) speakCardWord();
+  }
+  function startCards(practiceAll) {
+    stopRecognition();
+    clearCardTimer();
+    refs.finishing = true;
+    if (refs.raf) { cancelAnimationFrame(refs.raf); refs.raf = 0; }
+    stopSpeak();
+    stopListenLoop();
+    stopTracks();
+    clearClip();
+    clearWordUi(false);
+    clearSpot(true);
+    const queue = buildCardQueue(!!practiceAll);
+    if (!queue.length) {
+      set({
+        mode: "cards",
+        index: 0,
+        cardQueue: [],
+        cardPos: 0,
+        cardId: null,
+        cardPhase: "done",
+        lastHeard: "",
+        cardErr: "",
+        popped: null,
+        label: null,
+        spotTok: null,
+        micStatus: "off",
+        hasClip: false
+      });
+      return;
+    }
+    state.cardQueue = queue;
+    showCard(0, true);
+  }
+  function startCardsAgain() {
+    startCards(!dueCardsRemain());
+  }
+  function advanceCard() {
+    if (state.mode !== "cards") return;
+    const next = state.cardPos + 1;
+    if (next >= state.cardQueue.length) {
+      stopRecognition();
+      clearCardTimer();
+      set({ cardPhase: "done", lastHeard: "", cardErr: "", cardId: null, popped: null, label: null, spotTok: null });
+    } else {
+      showCard(next, true);
+    }
+  }
+  function markCardCorrect() {
+    const card = currentCard();
+    if (!card) return;
+    stopRecognition();
+    markCard(card.id, true);
+    set({ cardPhase: "correct", lastHeard: "", cardErr: "" });
+    speak(state.bookLang, txt("好棒！", "Great job!"), 0.95);
+    startMouth(cardToken(card));
+    clearCardTimer();
+    refs.cardTimer = setTimeout(() => {
+      refs.cardTimer = 0;
+      advanceCard();
+    }, 1200);
+  }
+  function judgeCard(transcripts) {
+    const card = currentCard();
+    if (!card || state.cardPhase === "correct" || state.cardPhase === "done") return;
+    const lang = isEn() ? "en" : "yue";
+    if (cardAnswerOk(card, lang, transcripts)) {
+      markCardCorrect();
+      return;
+    }
+    markCard(card.id, false);
+    let heard = "";
+    if (transcripts) {
+      for (let i = 0; i < transcripts.length; i++) {
+        if (transcripts[i] && String(transcripts[i]).trim()) { heard = String(transcripts[i]).trim(); break; }
+      }
+    }
+    set({ cardPhase: "wrong", lastHeard: heard, cardErr: "" });
+    speakCardWord();
+  }
+  function startCardSpeak() {
+    stopSpeak();
+    stopRecognition();
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) {
+      set({ cardPhase: "wrong", cardErr: "missing", lastHeard: "" });
+      return;
+    }
+    const rec = new SR();
+    rec.lang = isEn() ? "en-GB" : "zh-HK";
+    rec.continuous = false;
+    rec.interimResults = false;
+    rec.maxAlternatives = 3;
+    refs.recog = rec;
+    set({ cardPhase: "listening", lastHeard: "", cardErr: "" });
+    rec.onresult = (e) => {
+      const alts = [];
+      if (e && e.results) {
+        for (let i = 0; i < e.results.length; i++) {
+          const res = e.results[i];
+          for (let j = 0; j < res.length; j++) {
+            if (res[j] && res[j].transcript) alts.push(res[j].transcript);
+          }
+        }
+      }
+      stopRecognition();
+      judgeCard(alts);
+    };
+    rec.onerror = (e) => {
+      const err = e && e.error;
+      if (refs.recog !== rec) return;
+      stopRecognition();
+      if (err === "aborted" || err === "cancelled" || err === "canceled") return;
+      if (err === "not-allowed" || err === "service-not-allowed") {
+        set({ cardPhase: "wrong", cardErr: "denied", lastHeard: "" });
+      } else {
+        set({ cardPhase: "wrong", cardErr: "nospeech", lastHeard: "" });
+      }
+    };
+    rec.onend = () => {
+      if (refs.recog !== rec) return;
+      refs.recog = null;
+      if (state.mode === "cards" && state.cardPhase === "listening") {
+        set({ cardPhase: "wrong", cardErr: "nospeech", lastHeard: "" });
+      }
+    };
+    try {
+      rec.start();
+    } catch (e) {
+      refs.recog = null;
+      set({ cardPhase: "wrong", cardErr: "missing", lastHeard: "" });
+    }
+  }
+  function restoreCardSpot() {
+    const card = currentCard();
+    if (!card) return;
+    if (refs.spotTimer) { clearTimeout(refs.spotTimer); refs.spotTimer = 0; }
+    const tok = cardToken(card);
+    state.spotTok = tok;
+    if (card.spotId) {
+      state.popped = card.spotId;
+      state.label = { id: card.spotId, text: tok.d };
+    } else {
+      state.popped = null;
+      state.label = null;
+    }
+  }
+
   function onSpotClick(spot) {
+    if (state.mode === "cards") {
+      if (state.cardPhase === "done") return;
+      if (refs.spotTimer) clearTimeout(refs.spotTimer);
+      const name = isEn() ? spot.en : spot.yue;
+      state.popped = spot.id;
+      state.label = { id: spot.id, text: name };
+      syncSpotUi();
+      refs.spotTimer = setTimeout(() => {
+        restoreCardSpot();
+        syncSpotUi();
+        syncWords();
+      }, 2400);
+      return;
+    }
     const tok = spotToken(spot);
     if (refs.spotTimer) clearTimeout(refs.spotTimer);
     if (refs.tipTimer) clearTimeout(refs.tipTimer);
@@ -990,6 +1437,7 @@
     if (el && el.animate) {
       el.animate([{ transform: "scale(1)" }, { transform: "scale(1.02)" }, { transform: "scale(1)" }], { duration: 420, easing: "ease-out" });
     }
+    if (state.mode === "cards") return;
     if (state.mode === "echo" && (state.echoPhase === "listen" || state.echoPhase === "repeat" || state.echoPhase === "replay")) return;
     speakPage(0.95);
   }
@@ -1121,10 +1569,65 @@
       </div>`;
   }
 
+  function cardsPanelHTML() {
+    if (state.cardPhase === "done") {
+      return `<div class="center">
+        <div class="phase big">${txt("好棒！", "Great job!")}</div>
+        <div class="phase">${txt("今日溫完啦", "All done for now")}</div>
+        <div class="row">
+          <button type="button" class="btn primary" data-act="card-again">${txt("再練習", "Practice again")}</button>
+        </div>
+        <div class="row"><button type="button" class="btn" data-act="cover" style="min-height:44px;font-size:16px">${txt("封面", "Cover")}</button></div>
+      </div>`;
+    }
+    const queue = state.cardQueue || [];
+    const pos = state.cardPos || 0;
+    const card = currentCard();
+    const tok = card ? cardToken(card) : null;
+    const dots = queue.map((_, i) => `<i class="${i === pos ? "cur" : ""}"></i>`).join("");
+    let phase = "";
+    let extra = "";
+    if (state.cardPhase === "listening") {
+      phase = `<div class="phase">${txt("講緊…", "Listening…")}</div>`;
+    } else if (state.cardPhase === "correct") {
+      phase = `<div class="phase big">${txt("好棒！", "Great job!")}</div>`;
+    } else if (state.cardPhase === "wrong") {
+      if (state.cardErr === "nospeech") {
+        phase = `<div class="phase">${txt("聽唔到，再試啦", "I didn't hear. Try again.")}</div>`;
+      } else if (state.cardErr === "denied" || state.cardErr === "missing") {
+        phase = `<div class="phase">${txt("請用 Chrome 打開。亦可撳「再開咪」。", "Please open this in Chrome, or tap “Try mic again”.")}</div>`;
+        extra += `<div class="row"><button type="button" class="btn" data-act="retry-mic" style="min-height:44px;font-size:16px">${txt("再開咪", "Try mic again")}</button></div>`;
+      } else {
+        phase = `<div class="phase">${txt("再試一次", "Try again")}</div>`;
+        if (state.lastHeard) extra += `<div class="card-heard">${esc(state.lastHeard)}</div>`;
+        extra += `<div class="row"><button type="button" class="btn" data-act="card-parent-ok">${txt("家長確認", "Parent confirms")}</button></div>`;
+      }
+    }
+    const busy = state.cardPhase === "listening" || state.cardPhase === "correct";
+    return `<div class="center">
+        <div class="card-progress">${queue.length ? (pos + 1) + " / " + queue.length : ""}</div>
+        <div class="dots">${dots}</div>
+        <div class="card-word">${tok ? esc(tok.d) : ""}</div>
+        <div class="word-dock has-tip" id="word-dock" style="min-height:112px">
+          ${pronHTML(tok, true)}
+          <div class="mouth-face" aria-hidden="true">${mouthChrome()}</div>
+        </div>
+        ${phase}${extra}
+        <div class="row">
+          <button type="button" class="btn" data-act="card-listen" style="flex:1 1 140px;max-width:200px">${txt("聽一次", "Listen")}</button>
+          <button type="button" class="btn primary" data-act="card-speak" style="flex:1 1 140px;max-width:220px"${busy ? " disabled" : ""}>${txt("我讀", "I say it")}</button>
+        </div>
+        <div class="hint-text">${txt("讀正確先算過關", "Say it right to pass")}</div>
+        <div class="row"><button type="button" class="btn" data-act="cover" style="min-height:44px;font-size:16px">${txt("封面", "Cover")}</button></div>
+      </div>`;
+  }
+
   function panelHTML() {
     const page = pages[state.index];
-    const onCover = !!page.cover;
+    const onCover = !!page.cover && state.mode !== "cards";
     const last = state.index === pages.length - 1;
+
+    if (state.mode === "cards") return cardsPanelHTML();
 
     if (onCover) {
       const tip = dockTip();
@@ -1143,6 +1646,7 @@
         </div>
         <button type="button" class="btn primary" data-act="listen">${txt("聽故事", "Listen")}</button>
         <button type="button" class="btn teal" data-act="echo">${txt("跟讀", "Read with me")}</button>
+        <button type="button" class="btn gold" data-act="start-cards">${txt("生字卡", "Flashcards")}</button>
       </div>`;
     }
 
@@ -1207,7 +1711,7 @@
     const stage = document.getElementById("stage");
     const samePage = stage && stage.getAttribute("data-index") === String(state.index);
     const mid = panelHTML();
-    appEl.className = page.cover ? "cover" : "reading";
+    appEl.className = (page.cover && state.mode !== "cards") ? "cover" : "reading";
 
     if (!samePage) {
       const stageHtml = `<div class="stage-wrap enter" id="stage" data-index="${state.index}">
@@ -1235,7 +1739,7 @@
     refs.touchX = e.clientX;
   });
   app.addEventListener("pointerup", (e) => {
-    if (refs.touchX == null || state.mode === null) { refs.touchX = null; return; }
+    if (refs.touchX == null || state.mode === null || state.mode === "cards") { refs.touchX = null; return; }
     if (!e.target.closest("#stage") && !refs.swiped) { refs.touchX = null; return; }
     const dx = e.clientX - refs.touchX;
     refs.touchX = null;
@@ -1245,6 +1749,7 @@
   app.addEventListener("click", (e) => {
     const wordBtn = e.target.closest("[data-word]");
     if (wordBtn) {
+      if (state.mode === "cards") return;
       onWordTap(Number(wordBtn.getAttribute("data-word")));
       return;
     }
@@ -1265,9 +1770,14 @@
     const act = btn.getAttribute("data-act");
     if (act === "listen") void startBook("listen");
     else if (act === "echo") void startBook("echo");
+    else if (act === "start-cards") startCards(false);
     else if (act === "lang-yue") setBookLang("yue");
     else if (act === "lang-en") setBookLang("en");
     else if (act === "replay-model") replayModel();
+    else if (act === "card-listen") speakCardWord();
+    else if (act === "card-speak") startCardSpeak();
+    else if (act === "card-parent-ok") markCardCorrect();
+    else if (act === "card-again") startCardsAgain();
     else if (act === "done") void finishRepeat();
     else if (act === "play-clip") playClip();
     else if (act === "echo-again") void startBook("echo");
