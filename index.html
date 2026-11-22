@@ -46,10 +46,14 @@
     .word.on { background: #2f6f8f33; transform: scale(1.08); }
     .word.pop { animation: pop .42s ease-out; }
     .punct { display: inline-block; padding: 2px 0; }
-    .word-dock { min-height: 64px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .mouth-face { width: 56px; height: 56px; flex: 0 0 56px; }
+    .word-dock { min-height: 112px; display: flex; align-items: center; justify-content: center; gap: 14px; }
+    .pronounce { text-align: left; min-width: 0; }
+    .pron-syl { font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+    .pron-syl .syl.on { color: var(--blue); background: #2f6f8f22; border-radius: 8px; padding: 0 4px; }
+    .pron-syl .dot { color: var(--muted); padding: 0 3px; font-weight: 700; }
+    .mouth-trans { font-size: 16px; font-weight: 700; color: var(--muted); margin-top: 2px; }
+    .mouth-face { width: 112px; height: 100px; flex: 0 0 112px; border-radius: 18px; overflow: hidden; background: #c8dcf5; }
     .mouth-face svg { width: 100%; height: 100%; display: block; }
-    .mouth-trans { font-size: 20px; font-weight: 700; color: var(--blue); }
     .row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
     .btn { min-height: 52px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-size: 20px; font-weight: 700; padding: 0 18px; cursor: pointer; }
     .btn:disabled { opacity: .35; }
@@ -92,13 +96,13 @@
       { id: "cover-bear", left: 30, top: 10, width: 38, height: 70, yue: "小熊", en: "Little Bear", motion: "bob" },
       { id: "cover-scarf", left: 36, top: 34, width: 26, height: 20, yue: "頸巾", en: "a scarf" }
     ], wordsZh: [
-      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
-      { d: "去", s: "去", t: "Goes to", m: ["tight"] },
-      { d: "公園", s: "公園", t: "the Park", m: ["tight", "mid"] }
+      { d: "小熊", s: "小熊", t: "Little Bear", p: "siu · hung" },
+      { d: "去", s: "去", t: "Goes to", p: "heui" },
+      { d: "公園", s: "公園", t: "the Park", p: "gung · yun" }
     ], wordsEn: [
-      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
-      { d: "Goes to", s: "Goes to", t: "去", m: ["round"] },
-      { d: "the Park", s: "the Park", t: "公園", m: ["wide", "mid"] }
+      { d: "Little Bear", s: "Little Bear", t: "小熊", p: "li · tuhl · bair" },
+      { d: "Goes to", s: "Goes to", t: "去", p: "gohz · too" },
+      { d: "the Park", s: "the Park", t: "公園", p: "thuh · park" }
     ]},
     { img: "images/wake.jpg", alt: "小熊在床上伸懶腰", zh: "早晨，小熊起床了。", en: "Morning. Little Bear wakes up.", yue: "早晨，小熊起身啦。", enSpeak: "Morning. Little Bear wakes up.", spots: [
       { id: "wake-window", left: 70, top: 0, width: 30, height: 48, yue: "窗", en: "window" },
@@ -107,16 +111,16 @@
       { id: "wake-bear", left: 8, top: 6, width: 60, height: 62, yue: "小熊", en: "Little Bear", motion: "bob" },
       { id: "wake-scarf", left: 32, top: 36, width: 22, height: 26, yue: "頸巾", en: "a scarf" }
     ], wordsZh: [
-      { d: "早晨", s: "早晨", t: "Morning", m: ["round", "mid"] },
+      { d: "早晨", s: "早晨", t: "Morning", p: "jou · san" },
       { d: "，", s: "，" },
-      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
-      { d: "起床了", s: "起身啦", t: "wakes up", m: ["smile", "mid", "wide"] },
+      { d: "小熊", s: "小熊", t: "Little Bear", p: "siu · hung" },
+      { d: "起床了", s: "起身啦", t: "wakes up", p: "hei · san · laa" },
       { d: "。", s: "。" }
     ], wordsEn: [
-      { d: "Morning", s: "Morning", t: "早晨", m: ["round", "mid"] },
+      { d: "Morning", s: "Morning", t: "早晨", p: "mor · ning" },
       { d: ".", s: "." },
-      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
-      { d: "wakes up", s: "wakes up", t: "起床了", m: ["wide", "round"] },
+      { d: "Little Bear", s: "Little Bear", t: "小熊", p: "li · tuhl · bair" },
+      { d: "wakes up", s: "wakes up", t: "起床了", p: "wayks · up" },
       { d: ".", s: "." }
     ]},
     { img: "images/door.jpg", alt: "小熊打開門，外面有花園", zh: "小熊打開門。", en: "Little Bear opens the door.", yue: "小熊打開門。", enSpeak: "Little Bear opens the door.", spots: [
@@ -127,14 +131,14 @@
       { id: "door-flowers", left: 68, top: 50, width: 26, height: 36, yue: "花", en: "flowers" },
       { id: "door-bear", left: 28, top: 8, width: 42, height: 82, yue: "小熊", en: "Little Bear", motion: "bob" }
     ], wordsZh: [
-      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
-      { d: "打開", s: "打開", t: "opens", m: ["wide", "wide"] },
-      { d: "門", s: "門", t: "the door", m: ["mid"] },
+      { d: "小熊", s: "小熊", t: "Little Bear", p: "siu · hung" },
+      { d: "打開", s: "打開", t: "opens", p: "daa · hoi" },
+      { d: "門", s: "門", t: "the door", p: "mun" },
       { d: "。", s: "。" }
     ], wordsEn: [
-      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
-      { d: "opens", s: "opens", t: "打開", m: ["round"] },
-      { d: "the door", s: "the door", t: "門", m: ["mid", "round"] },
+      { d: "Little Bear", s: "Little Bear", t: "小熊", p: "li · tuhl · bair" },
+      { d: "opens", s: "opens", t: "打開", p: "oh · penz" },
+      { d: "the door", s: "the door", t: "門", p: "thuh · dor" },
       { d: ".", s: "." }
     ]},
     { img: "images/tree.jpg", alt: "小熊看著公園裡的大樹", zh: "公園裡有一棵大樹。", en: "There is a big tree in the park.", yue: "公園有一樖大樹。", enSpeak: "There is a big tree in the park.", fx: "petals", spots: [
@@ -144,15 +148,15 @@
       { id: "tree-flowers", left: 0, top: 76, width: 100, height: 24, yue: "花", en: "flowers" },
       { id: "tree-bear", left: 14, top: 36, width: 28, height: 50, yue: "小熊", en: "Little Bear", motion: "bob" }
     ], wordsZh: [
-      { d: "公園裡", s: "公園", t: "the park", m: ["tight", "mid"] },
-      { d: "有", s: "有", t: "there is", m: ["tight"] },
-      { d: "一棵", s: "一樖", t: "a", m: ["smile", "mid"] },
-      { d: "大樹", s: "大樹", t: "big tree", m: ["wide", "tight"] },
+      { d: "公園裡", s: "公園", t: "the park", p: "gung · yun" },
+      { d: "有", s: "有", t: "there is", p: "yau" },
+      { d: "一棵", s: "一樖", t: "a", p: "yat · po" },
+      { d: "大樹", s: "大樹", t: "big tree", p: "daai · syu" },
       { d: "。", s: "。" }
     ], wordsEn: [
-      { d: "There is", s: "There is", t: "有", m: ["mid", "smile"] },
-      { d: "a big tree", s: "a big tree", t: "一棵大樹", m: ["wide", "smile"] },
-      { d: "in the park", s: "in the park", t: "公園裡", m: ["smile", "wide"] },
+      { d: "There is", s: "There is", t: "有", p: "thair · iz" },
+      { d: "a big tree", s: "a big tree", t: "一棵大樹", p: "uh · big · tree" },
+      { d: "in the park", s: "in the park", t: "公園裡", p: "in · thuh · park" },
       { d: ".", s: "." }
     ]},
     { img: "images/bird.jpg", alt: "小熊向樹枝上的藍小鳥打招呼", zh: "小鳥說：「你好！」", en: "A little bird says, Hello!", yue: "小鳥話：你好！", enSpeak: "A little bird says hello!", spots: [
@@ -163,15 +167,15 @@
       { id: "bird-bear", left: 10, top: 12, width: 46, height: 70, yue: "小熊", en: "Little Bear" },
       { id: "bird-bird", left: 66, top: 14, width: 26, height: 30, yue: "小鳥", en: "a little bird", motion: "bob" }
     ], wordsZh: [
-      { d: "小鳥", s: "小鳥", t: "a little bird", m: ["smile", "round"] },
-      { d: "說", s: "話", t: "says", m: ["wide"] },
+      { d: "小鳥", s: "小鳥", t: "a little bird", p: "siu · niu" },
+      { d: "說", s: "話", t: "says", p: "waa" },
       { d: "：「", s: "：" },
-      { d: "你好", s: "你好", t: "Hello", m: ["smile", "round"] },
+      { d: "你好", s: "你好", t: "Hello", p: "nei · hou" },
       { d: "！」", s: "！" }
     ], wordsEn: [
-      { d: "A little bird", s: "A little bird", t: "小鳥", m: ["wide", "smile"] },
-      { d: "says,", s: "says", t: "說", m: ["mid"] },
-      { d: "Hello!", s: "hello!", t: "你好", m: ["mid", "round"] }
+      { d: "A little bird", s: "A little bird", t: "小鳥", p: "uh · li · tuhl · burd" },
+      { d: "says,", s: "says", t: "說", p: "sez" },
+      { d: "Hello!", s: "hello!", t: "你好", p: "heh · loh" }
     ]},
     { img: "images/play.jpg", alt: "小熊和小鳥一起玩紅球", zh: "小熊和小鳥一起玩。", en: "Little Bear and the bird play together.", yue: "小熊同小鳥一齊玩。", enSpeak: "Little Bear and the bird play together.", fx: "petals", spots: [
       { id: "play-sky", left: 0, top: 0, width: 100, height: 52, yue: "白雲", en: "clouds", hint: false },
@@ -182,18 +186,18 @@
       { id: "play-bird", left: 58, top: 46, width: 18, height: 20, yue: "小鳥", en: "a little bird", motion: "bob" },
       { id: "play-ball", left: 54, top: 62, width: 24, height: 28, yue: "波", en: "a ball", motion: "bounce" }
     ], wordsZh: [
-      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
-      { d: "和", s: "同", t: "and", m: ["tight"] },
-      { d: "小鳥", s: "小鳥", t: "the bird", m: ["smile", "round"] },
-      { d: "一起", s: "一齊", t: "together", m: ["smile", "smile"] },
-      { d: "玩", s: "玩", t: "play", m: ["wide"] },
+      { d: "小熊", s: "小熊", t: "Little Bear", p: "siu · hung" },
+      { d: "和", s: "同", t: "and", p: "tung" },
+      { d: "小鳥", s: "小鳥", t: "the bird", p: "siu · niu" },
+      { d: "一起", s: "一齊", t: "together", p: "yat · chai" },
+      { d: "玩", s: "玩", t: "play", p: "waan" },
       { d: "。", s: "。" }
     ], wordsEn: [
-      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
-      { d: "and", s: "and", t: "和", m: ["wide"] },
-      { d: "the bird", s: "the bird", t: "小鳥", m: ["mid"] },
-      { d: "play", s: "play", t: "玩", m: ["mid"] },
-      { d: "together", s: "together", t: "一起", m: ["mid", "round"] },
+      { d: "Little Bear", s: "Little Bear", t: "小熊", p: "li · tuhl · bair" },
+      { d: "and", s: "and", t: "和", p: "and" },
+      { d: "the bird", s: "the bird", t: "小鳥", p: "thuh · burd" },
+      { d: "play", s: "play", t: "玩", p: "play" },
+      { d: "together", s: "together", t: "一起", p: "tuh · geth · er" },
       { d: ".", s: "." }
     ]},
     { img: "images/sunset.jpg", alt: "夕陽下小熊沿著小路走回家", zh: "太陽下山了。小熊回家。", en: "The sun goes down. Little Bear goes home.", yue: "太陽落山啦。小熊返屋企。", enSpeak: "The sun goes down. Little Bear goes home.", fx: "sun", spots: [
@@ -207,18 +211,18 @@
       { id: "sunset-bird", left: 68, top: 8, width: 16, height: 16, yue: "小鳥", en: "a little bird", motion: "bob" },
       { id: "sunset-sun", left: 70, top: 34, width: 18, height: 22, yue: "太陽", en: "the sun" }
     ], wordsZh: [
-      { d: "太陽", s: "太陽", t: "the sun", m: ["wide", "mid"] },
-      { d: "下山了", s: "落山啦", t: "goes down", m: ["round", "wide"] },
+      { d: "太陽", s: "太陽", t: "the sun", p: "taai · yeung" },
+      { d: "下山了", s: "落山啦", t: "goes down", p: "lok · saan · laa" },
       { d: "。", s: "。" },
-      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
-      { d: "回家", s: "返屋企", t: "goes home", m: ["wide", "tight", "smile"] },
+      { d: "小熊", s: "小熊", t: "Little Bear", p: "siu · hung" },
+      { d: "回家", s: "返屋企", t: "goes home", p: "faan · uk · kei" },
       { d: "。", s: "。" }
     ], wordsEn: [
-      { d: "The sun", s: "The sun", t: "太陽", m: ["mid", "round"] },
-      { d: "goes down", s: "goes down", t: "下山了", m: ["round", "wide"] },
+      { d: "The sun", s: "The sun", t: "太陽", p: "thuh · sun" },
+      { d: "goes down", s: "goes down", t: "下山了", p: "gohz · down" },
       { d: ".", s: "." },
-      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
-      { d: "goes home", s: "goes home", t: "回家", m: ["round", "round"] },
+      { d: "Little Bear", s: "Little Bear", t: "小熊", p: "li · tuhl · bair" },
+      { d: "goes home", s: "goes home", t: "回家", p: "gohz · hohm" },
       { d: ".", s: "." }
     ]},
     { img: "images/night.jpg", alt: "小熊睡著了，小鳥在窗邊休息", zh: "晚安，小熊。", en: "Good night, Little Bear.", yue: "晚安，小熊。", enSpeak: "Good night, Little Bear.", fx: "stars", spots: [
@@ -233,14 +237,14 @@
       { id: "night-bear", left: 10, top: 14, width: 46, height: 54, yue: "小熊", en: "Little Bear" },
       { id: "night-bird", left: 68, top: 28, width: 22, height: 24, yue: "小鳥", en: "a little bird", motion: "bob" }
     ], wordsZh: [
-      { d: "晚安", s: "晚安", t: "Good night", m: ["wide", "mid"] },
+      { d: "晚安", s: "晚安", t: "Good night", p: "maan · on" },
       { d: "，", s: "，" },
-      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
+      { d: "小熊", s: "小熊", t: "Little Bear", p: "siu · hung" },
       { d: "。", s: "。" }
     ], wordsEn: [
-      { d: "Good night", s: "Good night", t: "晚安", m: ["round", "smile"] },
+      { d: "Good night", s: "Good night", t: "晚安", p: "good · night" },
       { d: ",", s: "," },
-      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
+      { d: "Little Bear", s: "Little Bear", t: "小熊", p: "li · tuhl · bair" },
       { d: ".", s: "." }
     ]}
   ];
@@ -259,15 +263,85 @@
     { left: 86, top: 3, delay: 1300, size: 5 }
   ];
   const waveScale = [0.4, 0.7, 1, 0.7, 0.4];
-  const MOUTH = {
-    rest: { d: "M32 62 Q50 70 68 62", fill: "none" },
-    closed: { d: "M34 64 L66 64", fill: "none" },
-    wide: { d: "M30 58 Q50 86 70 58 Q50 66 30 58 Z", fill: "#3b2a1a" },
-    mid: { d: "M33 60 Q50 78 67 60 Q50 66 33 60 Z", fill: "#3b2a1a" },
-    smile: { d: "M30 60 Q50 74 70 60", fill: "none" },
-    round: { d: "M50 70 m-8 -2 a8 9 0 1 1 16 0 a8 9 0 1 1 -16 0", fill: "#3b2a1a" },
-    tight: { d: "M50 70 m-5 -1 a5 6 0 1 1 10 0 a5 6 0 1 1 -10 0", fill: "#3b2a1a" }
+  const LIP_FILL = "#f7f3f5";
+  const LIP_LINE = "#4e86c4";
+  const LIP_OPEN = "#2c2c2c";
+  const LIPS = {
+    rest: '<path d="M46 100 C46 78 70 72 100 72 C130 72 154 78 154 100 C154 122 130 128 100 128 C70 128 46 122 46 100 Z" fill="#f7f3f5" stroke="#4e86c4" stroke-width="4"></path><path d="M60 100 L140 100" fill="none" stroke="#2a2a2a" stroke-width="6" stroke-linecap="round"></path>',
+    slight: '<path d="M46 100 C46 78 70 72 100 72 C130 72 154 78 154 100 C154 122 130 128 100 128 C70 128 46 122 46 100 Z" fill="#f7f3f5" stroke="#4e86c4" stroke-width="4"></path><path d="M60 100 L140 100" fill="none" stroke="#2a2a2a" stroke-width="6" stroke-linecap="round"></path>',
+    closed: '<path d="M48 100 C48 88 70 84 100 84 C130 84 152 88 152 100 C152 112 130 116 100 116 C70 116 48 112 48 100 Z" fill="#f7f3f5" stroke="#4e86c4" stroke-width="4"></path><path d="M58 100 L142 100" fill="none" stroke="#2a2a2a" stroke-width="5" stroke-linecap="round"></path>',
+    wide: '<path d="M42 100 C42 68 70 58 100 58 C130 58 158 68 158 100 C158 132 130 142 100 142 C70 142 42 132 42 100 Z" fill="#f7f3f5" stroke="#4e86c4" stroke-width="4"></path><path d="M68 100 C68 80 80 72 100 72 C120 72 132 80 132 100 C132 120 120 128 100 128 C80 128 68 120 68 100 Z" fill="#2c2c2c"></path>',
+    mid: '<path d="M46 100 C46 74 72 66 100 66 C128 66 154 74 154 100 C154 126 128 134 100 134 C72 134 46 126 46 100 Z" fill="#f7f3f5" stroke="#4e86c4" stroke-width="4"></path><path d="M72 100 C72 86 82 80 100 80 C118 80 128 86 128 100 C128 114 118 120 100 120 C82 120 72 114 72 100 Z" fill="#2c2c2c"></path>',
+    smile: '<path d="M30 102 C36 82 70 78 100 80 C130 78 164 82 170 102 C164 116 132 120 100 120 C68 120 36 116 30 102 Z" fill="#f7f3f5" stroke="#4e86c4" stroke-width="4"></path><path d="M50 102 C72 96 128 96 150 102 C128 108 72 108 50 102 Z" fill="#2c2c2c"></path>',
+    round: '<path d="M58 100 C58 70 76 58 100 58 C124 58 142 70 142 100 C142 130 124 142 100 142 C76 142 58 130 58 100 Z" fill="#f7f3f5" stroke="#4e86c4" stroke-width="4"></path><ellipse cx="100" cy="102" rx="22" ry="24" fill="#2c2c2c"></ellipse>',
+    tight: '<path d="M70 100 C70 78 82 68 100 68 C118 68 130 78 130 100 C130 122 118 132 100 132 C82 132 70 122 70 100 Z" fill="#f7f3f5" stroke="#4e86c4" stroke-width="4"></path><ellipse cx="100" cy="102" rx="12" ry="14" fill="#2c2c2c"></ellipse>'
   };
+  const MOUTH_OK = { rest: 1, slight: 1, closed: 1, wide: 1, mid: 1, smile: 1, round: 1, tight: 1 };
+
+  function mouthChrome() {
+    return `<svg viewBox="0 0 200 180" aria-hidden="true">
+      <rect width="200" height="180" fill="#c8dcf5"></rect>
+      <ellipse cx="100" cy="16" rx="126" ry="172" fill="#d3e3f7"></ellipse>
+      <path d="M16 4 Q100 214 184 4" fill="#c2d6f0"></path>
+      <path d="M76 20 Q100 40 124 20" fill="none" stroke="#7aa0ce" stroke-width="6" stroke-linecap="round"></path>
+      <path d="M78 158 Q100 170 122 158" fill="none" stroke="#e3eef9" stroke-width="7" stroke-linecap="round"></path>
+      <g id="mouth-lips">${LIPS[state.mouth] || LIPS.rest}</g>
+    </svg>`;
+  }
+
+  function syllablesOf(p) {
+    return String(p || "").split(/[·•\s]+/).filter((s) => s && !/^[.,!?]+$/.test(s));
+  }
+
+  function yueSyl(s) {
+    if (s === "ng") return ["mid"];
+    if (s === "m") return ["closed"];
+    let rest = s;
+    const shapes = [];
+    const inits = [["ng","mid"],["gw","tight"],["kw","tight"],["b","closed"],["p","closed"],["m","closed"],["f","closed"],["w","tight"],["d","slight"],["t","slight"],["n","slight"],["l","slight"],["z","slight"],["c","slight"],["s","slight"],["g","mid"],["k","mid"],["h","mid"],["j","smile"]];
+    for (let i = 0; i < inits.length; i++) {
+      const prefix = inits[i][0];
+      const vis = inits[i][1];
+      if (rest.startsWith(prefix) && rest.length > prefix.length) {
+        shapes.push(vis);
+        rest = rest.slice(prefix.length);
+        break;
+      }
+    }
+    const finals = [["eoi","smile"],["eon","round"],["eot","round"],["oeng","round"],["oek","round"],["aang","wide"],["aai","wide"],["aau","wide"],["aan","wide"],["aap","wide"],["aat","wide"],["aak","wide"],["aa","wide"],["ang","mid"],["ai","smile"],["au","round"],["am","mid"],["an","mid"],["ap","mid"],["at","mid"],["ak","mid"],["eng","mid"],["ei","smile"],["eu","round"],["ek","mid"],["ing","smile"],["iu","smile"],["im","smile"],["in","smile"],["ip","smile"],["it","smile"],["ik","smile"],["ong","round"],["ou","round"],["oi","round"],["on","round"],["ot","round"],["ok","round"],["ung","tight"],["ui","tight"],["un","tight"],["ut","tight"],["uk","tight"],["yun","smile"],["yut","smile"],["yu","smile"],["oe","round"],["a","mid"],["e","mid"],["i","smile"],["o","round"],["u","tight"]];
+    for (let i = 0; i < finals.length; i++) {
+      if (rest === finals[i][0] || rest.startsWith(finals[i][0])) {
+        shapes.push(finals[i][1]);
+        break;
+      }
+    }
+    return shapes.length ? shapes : ["slight"];
+  }
+
+  function enSyl(s) {
+    const chunks = s.match(/th|ch|sh|wh|qu|ee|ea|oo|oa|ow|ai|ay|igh|aw|au|oy|oi|ou|er|ur|ir|or|ar|ng|[a-z]/g) || [s];
+    const map = { p:"closed", b:"closed", m:"closed", f:"closed", v:"closed", w:"tight", wh:"tight", qu:"tight", u:"tight", oo:"tight", ou:"tight", o:"round", oa:"round", ow:"round", aw:"round", au:"round", or:"round", oy:"round", oi:"round", ee:"smile", ea:"smile", y:"smile", i:"smile", ay:"smile", ai:"smile", igh:"smile", a:"wide", e:"mid", er:"mid", ur:"mid", ir:"mid", ar:"mid", th:"slight", s:"slight", z:"slight", t:"slight", d:"slight", n:"slight", l:"slight", c:"slight", ch:"slight", sh:"slight", h:"mid", k:"mid", g:"mid", ng:"mid", r:"mid", j:"smile" };
+    const shapes = [];
+    chunks.forEach((c) => { if (map[c]) shapes.push(map[c]); });
+    return shapes.length ? shapes : ["slight"];
+  }
+
+  function visemesFromPhonetic(p, en) {
+    const syls = syllablesOf(p);
+    const out = [];
+    syls.forEach((syl) => {
+      const clean = syl.toLowerCase().replace(/[0-9.,!?'"]/g, "");
+      const more = en ? enSyl(clean) : yueSyl(clean);
+      out.push.apply(out, more);
+    });
+    return out.length ? out : ["slight"];
+  }
+
+  function visemesFor(tok) {
+    if (!tok) return ["rest"];
+    if (tok.m && tok.m.length) return tok.m;
+    return visemesFromPhonetic(tok.p || tok.s, isEn());
+  }
 
   const state = {
     index: 0,
@@ -302,7 +376,10 @@
     micPromise: null,
     wordTimers: [],
     mouthTimer: 0,
-    tipTimer: 0
+    tipTimer: 0,
+    mouthList: [],
+    mouthSyls: [],
+    mouthStep: 0
   };
 
   function isEn() { return state.bookLang === "en"; }
@@ -403,25 +480,43 @@
   }
 
   function applyMouth(shape) {
-    state.mouth = MOUTH[shape] ? shape : "rest";
-    const lip = document.getElementById("lips");
-    if (!lip) return;
-    const m = MOUTH[state.mouth];
-    lip.setAttribute("d", m.d);
-    lip.setAttribute("fill", m.fill);
-    lip.setAttribute("stroke", m.fill === "none" ? "#3b2a1a" : "none");
+    state.mouth = MOUTH_OK[shape] ? shape : "rest";
+    const g = document.getElementById("mouth-lips");
+    if (!g) return;
+    g.innerHTML = LIPS[state.mouth] || LIPS.rest;
   }
 
-  function startMouth(shapes) {
+  function syncSyllables() {
+    const root = document.getElementById("pron-syl");
+    if (!root) return;
+    const syls = refs.mouthSyls || [];
+    const shapes = refs.mouthList || [];
+    let si = 0;
+    if (syls.length && shapes.length) {
+      si = Math.min(syls.length - 1, Math.floor((refs.mouthStep || 0) * syls.length / shapes.length));
+    }
+    root.querySelectorAll("[data-syl]").forEach((el) => {
+      el.classList.toggle("on", Number(el.getAttribute("data-syl")) === si);
+    });
+  }
+
+  function startMouth(tok) {
     if (refs.mouthTimer) { clearInterval(refs.mouthTimer); refs.mouthTimer = 0; }
-    const list = (shapes && shapes.length) ? shapes : ["mid"];
-    let i = 0;
-    applyMouth(list[0]);
+    const list = visemesFor(tok);
+    refs.mouthList = list;
+    refs.mouthSyls = syllablesOf(tok && tok.p);
+    refs.mouthStep = 0;
+    applyMouth(list[0] || "slight");
+    syncSyllables();
     if (list.length > 1) {
+      let i = 0;
       refs.mouthTimer = setInterval(() => {
-        i = (i + 1) % list.length;
+        if (i >= list.length - 1) { clearInterval(refs.mouthTimer); refs.mouthTimer = 0; return; }
+        i += 1;
+        refs.mouthStep = i;
         applyMouth(list[i]);
-      }, 150);
+        syncSyllables();
+      }, 160);
     }
   }
 
@@ -430,7 +525,7 @@
     if (withTip) state.wordTip = index;
     const tokens = pageTokens(pages[state.index]);
     const tok = tokens[index];
-    if (tok && tok.m) startMouth(tok.m);
+    if (tok && !isPunct(tok)) startMouth(tok);
     else applyMouth("rest");
     syncWords();
   }
@@ -875,6 +970,21 @@
     if (sparks.innerHTML !== html) sparks.innerHTML = html;
   }
 
+  function pronHTML(tok, show) {
+    if (!show || !tok) return `<div class="pronounce" hidden></div>`;
+    const syls = syllablesOf(tok.p);
+    const shapes = refs.mouthList && refs.mouthList.length ? refs.mouthList : visemesFor(tok);
+    let si = 0;
+    if (syls.length && shapes.length) {
+      si = Math.min(syls.length - 1, Math.floor((refs.mouthStep || 0) * syls.length / shapes.length));
+    }
+    const sylLine = syls.length
+      ? syls.map((s, i) => `${i ? '<span class="dot">·</span>' : ""}<span class="syl${i === si ? " on" : ""}" data-syl="${i}">${esc(s)}</span>`).join("")
+      : "";
+    const trans = tok.t ? `<div class="mouth-trans">${esc(tok.t)}</div>` : "";
+    return `<div class="pronounce"><div class="pron-syl" id="pron-syl">${sylLine}</div>${trans}</div>`;
+  }
+
   function syncWords() {
     const root = document.getElementById("words");
     if (root) {
@@ -888,15 +998,15 @@
     if (!dock) return;
     const tokens = pageTokens(pages[state.index]);
     const tip = state.wordTip >= 0 ? tokens[state.wordTip] : (state.activeWord >= 0 ? tokens[state.activeWord] : null);
-    const show = tip && tip.t && (state.wordTip >= 0 || state.playing === state.bookLang);
+    const show = !!(tip && tip.t && (state.wordTip >= 0 || state.playing === state.bookLang));
     const face = dock.querySelector(".mouth-face");
-    const trans = dock.querySelector(".mouth-trans");
+    let pron = dock.querySelector(".pronounce");
     if (face) face.hidden = !show;
-    if (trans) {
-      trans.hidden = !(show && state.wordTip >= 0 && tip.t);
-      trans.textContent = (show && state.wordTip >= 0 && tip.t) ? tip.t : "";
-    }
+    const html = pronHTML(tip, show);
+    if (!pron) dock.insertAdjacentHTML("afterbegin", html);
+    else pron.outerHTML = html;
     applyMouth(show ? state.mouth : "rest");
+    if (show) syncSyllables();
   }
 
   function wordsHTML(page) {
@@ -907,20 +1017,12 @@
       const pop = state.wordPop === i ? " pop" : "";
       return `<button type="button" class="word${on}${pop}" data-word="${i}">${esc(tok.d)}</button>`;
     }).join("");
-    const tip = state.wordTip >= 0 ? tokens[state.wordTip] : null;
-    const showFace = (tip && tip.t) || (state.activeWord >= 0 && state.playing === state.bookLang);
-    const m = MOUTH[state.mouth] || MOUTH.rest;
+    const tip = state.wordTip >= 0 ? tokens[state.wordTip] : (state.activeWord >= 0 ? tokens[state.activeWord] : null);
+    const showFace = !!(tip && tip.t && (state.wordTip >= 0 || state.playing === state.bookLang));
     return `<div class="words" id="words">${words}</div>
       <div class="word-dock" id="word-dock">
-        <div class="mouth-face" ${showFace ? "" : "hidden"} aria-hidden="true">
-          <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="46" fill="#ffe8b0" stroke="#3b2a1a" stroke-width="3"></circle>
-            <circle cx="35" cy="40" r="5" fill="#3b2a1a"></circle>
-            <circle cx="65" cy="40" r="5" fill="#3b2a1a"></circle>
-            <path id="lips" d="${m.d}" fill="${m.fill}" stroke="${m.fill === "none" ? "#3b2a1a" : "none"}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-        </div>
-        <div class="mouth-trans" ${tip && tip.t ? "" : "hidden"}>${tip && tip.t ? esc(tip.t) : ""}</div>
+        ${pronHTML(tip, showFace)}
+        <div class="mouth-face" ${showFace ? "" : "hidden"} aria-hidden="true">${mouthChrome()}</div>
       </div>`;
   }
 
