@@ -19,36 +19,45 @@
       --safe: env(safe-area-inset-bottom, 0px);
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
+    html, body { margin: 0; height: 100%; height: 100dvh; overflow: hidden; background: var(--bg); color: var(--ink);
       font-family: "PingFang HK", "Noto Sans HK", "Noto Sans TC", "Hiragino Sans GB", sans-serif; }
-    body { padding: 12px 12px calc(16px + var(--safe)); }
+    body { display: flex; flex-direction: column; padding: 8px 8px calc(8px + var(--safe)); }
     button { font: inherit; color: inherit; }
-    #app { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-    .stage-wrap { position: relative; width: 100%; aspect-ratio: 4/3; background: #efe4d3; border-radius: 20px; overflow: hidden; }
+    #app { flex: 1; min-height: 0; width: 100%; max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+    .stage-wrap { position: relative; flex: 0 0 auto; width: min(100%, calc((100dvh - 200px) * 4 / 3)); aspect-ratio: 4/3; margin: 0 auto; background: #efe4d3; border-radius: 20px; overflow: hidden; }
+    #app.reading .stage-wrap { width: min(100%, calc((100dvh - 270px) * 4 / 3)); }
     .stage-wrap.enter { animation: pagein .35s ease-out; }
-    .stage-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none; user-select: none; }
+    .stage-wrap img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; pointer-events: none; user-select: none; }
     .fx, .spot { position: absolute; }
     .spot { background: transparent; border: 0; padding: 0; cursor: pointer; }
     .hint { position: absolute; left: 50%; top: 45%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 999px; border: 2px solid #fff; box-sizing: border-box; pointer-events: none; animation: pulse 1.8s ease-out 2 forwards; }
     .nametag { position: absolute; left: 50%; top: 8%; transform: translateX(-50%); background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 16px; font-weight: 700; white-space: nowrap; pointer-events: none; }
     .pop { animation: pop .42s ease-out; }
-    .panel { display: flex; flex-direction: column; gap: 12px; }
-    .center { text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+    #panel { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .panel { display: flex; flex-direction: column; gap: 8px; }
+    .center { text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center; }
     .title { font-size: 28px; font-weight: 700; }
     .sub { font-size: 18px; color: var(--muted); }
     .hint-text { font-size: 13px; color: var(--muted); text-align: center; }
     .phase { font-size: 22px; font-weight: 700; color: var(--blue); text-align: center; }
     .phase.big { font-size: 28px; }
-    .line { text-align: center; font-weight: 700; line-height: 1.35; border-radius: 16px; padding: 4px 10px; font-size: 24px; }
-    .line.active { background: #2f6f8f33; }
-    .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; }
-    .btn { min-height: 56px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-size: 20px; font-weight: 700; padding: 0 20px; cursor: pointer; }
+    .words { text-align: center; font-weight: 700; line-height: 1.45; font-size: 26px; }
+    .word { display: inline-block; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; padding: 2px 5px; margin: 1px 0; border-radius: 12px; cursor: pointer; min-height: 44px; }
+    .word.on { background: #2f6f8f33; transform: scale(1.08); }
+    .word.pop { animation: pop .42s ease-out; }
+    .punct { display: inline-block; padding: 2px 0; }
+    .word-dock { min-height: 64px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .mouth-face { width: 56px; height: 56px; flex: 0 0 56px; }
+    .mouth-face svg { width: 100%; height: 100%; display: block; }
+    .mouth-trans { font-size: 20px; font-weight: 700; color: var(--blue); }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
+    .btn { min-height: 52px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-size: 20px; font-weight: 700; padding: 0 18px; cursor: pointer; }
     .btn:disabled { opacity: .35; }
     .btn.on { border: 2px solid var(--blue); }
-    .btn.primary { min-width: 200px; background: var(--blue); color: #fff; border: 0; }
-    .btn.teal { background: var(--teal); color: #fff; border: 0; min-width: 200px; }
-    .btn.nav { width: 64px; height: 64px; padding: 0; font-size: 28px; }
-    .wave { display: flex; align-items: flex-end; justify-content: center; gap: 6px; height: 36px; }
+    .btn.primary { min-width: 180px; background: var(--blue); color: #fff; border: 0; }
+    .btn.teal { background: var(--teal); color: #fff; border: 0; min-width: 180px; }
+    .btn.nav { width: 56px; height: 56px; padding: 0; font-size: 28px; min-height: 56px; }
+    .wave { display: flex; align-items: flex-end; justify-content: center; gap: 6px; height: 32px; }
     .wave span { width: 8px; border-radius: 999px; background: var(--blue); display: inline-block; }
     .dots { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; flex: 1 1 80px; }
     .dots i { width: 8px; height: 8px; border-radius: 999px; background: var(--line); display: inline-block; }
@@ -82,6 +91,14 @@
       { id: "cover-flowers-r", left: 72, top: 70, width: 28, height: 30, yue: "花", en: "flowers" },
       { id: "cover-bear", left: 30, top: 10, width: 38, height: 70, yue: "小熊", en: "Little Bear", motion: "bob" },
       { id: "cover-scarf", left: 36, top: 34, width: 26, height: 20, yue: "頸巾", en: "a scarf" }
+    ], wordsZh: [
+      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
+      { d: "去", s: "去", t: "Goes to", m: ["tight"] },
+      { d: "公園", s: "公園", t: "the Park", m: ["tight", "mid"] }
+    ], wordsEn: [
+      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
+      { d: "Goes to", s: "Goes to", t: "去", m: ["round"] },
+      { d: "the Park", s: "the Park", t: "公園", m: ["wide", "mid"] }
     ]},
     { img: "images/wake.jpg", alt: "小熊在床上伸懶腰", zh: "早晨，小熊起床了。", en: "Morning. Little Bear wakes up.", yue: "早晨，小熊起身啦。", enSpeak: "Morning. Little Bear wakes up.", spots: [
       { id: "wake-window", left: 70, top: 0, width: 30, height: 48, yue: "窗", en: "window" },
@@ -89,6 +106,18 @@
       { id: "wake-quilt", left: 40, top: 58, width: 60, height: 42, yue: "被", en: "a blanket" },
       { id: "wake-bear", left: 8, top: 6, width: 60, height: 62, yue: "小熊", en: "Little Bear", motion: "bob" },
       { id: "wake-scarf", left: 32, top: 36, width: 22, height: 26, yue: "頸巾", en: "a scarf" }
+    ], wordsZh: [
+      { d: "早晨", s: "早晨", t: "Morning", m: ["round", "mid"] },
+      { d: "，", s: "，" },
+      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
+      { d: "起床了", s: "起身啦", t: "wakes up", m: ["smile", "mid", "wide"] },
+      { d: "。", s: "。" }
+    ], wordsEn: [
+      { d: "Morning", s: "Morning", t: "早晨", m: ["round", "mid"] },
+      { d: ".", s: "." },
+      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
+      { d: "wakes up", s: "wakes up", t: "起床了", m: ["wide", "round"] },
+      { d: ".", s: "." }
     ]},
     { img: "images/door.jpg", alt: "小熊打開門，外面有花園", zh: "小熊打開門。", en: "Little Bear opens the door.", yue: "小熊打開門。", enSpeak: "Little Bear opens the door.", spots: [
       { id: "door-floor", left: 0, top: 86, width: 100, height: 14, yue: "地板", en: "the floor", hint: false },
@@ -97,6 +126,16 @@
       { id: "door-garden", left: 64, top: 6, width: 32, height: 78, yue: "花園", en: "a garden", hint: false },
       { id: "door-flowers", left: 68, top: 50, width: 26, height: 36, yue: "花", en: "flowers" },
       { id: "door-bear", left: 28, top: 8, width: 42, height: 82, yue: "小熊", en: "Little Bear", motion: "bob" }
+    ], wordsZh: [
+      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
+      { d: "打開", s: "打開", t: "opens", m: ["wide", "wide"] },
+      { d: "門", s: "門", t: "the door", m: ["mid"] },
+      { d: "。", s: "。" }
+    ], wordsEn: [
+      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
+      { d: "opens", s: "opens", t: "打開", m: ["round"] },
+      { d: "the door", s: "the door", t: "門", m: ["mid", "round"] },
+      { d: ".", s: "." }
     ]},
     { img: "images/tree.jpg", alt: "小熊看著公園裡的大樹", zh: "公園裡有一棵大樹。", en: "There is a big tree in the park.", yue: "公園有一樖大樹。", enSpeak: "There is a big tree in the park.", fx: "petals", spots: [
       { id: "tree-sky", left: 0, top: 0, width: 42, height: 28, yue: "天", en: "the sky", hint: false },
@@ -104,6 +143,17 @@
       { id: "tree-tree", left: 38, top: 0, width: 62, height: 78, yue: "大樹", en: "a big tree" },
       { id: "tree-flowers", left: 0, top: 76, width: 100, height: 24, yue: "花", en: "flowers" },
       { id: "tree-bear", left: 14, top: 36, width: 28, height: 50, yue: "小熊", en: "Little Bear", motion: "bob" }
+    ], wordsZh: [
+      { d: "公園裡", s: "公園", t: "the park", m: ["tight", "mid"] },
+      { d: "有", s: "有", t: "there is", m: ["tight"] },
+      { d: "一棵", s: "一樖", t: "a", m: ["smile", "mid"] },
+      { d: "大樹", s: "大樹", t: "big tree", m: ["wide", "tight"] },
+      { d: "。", s: "。" }
+    ], wordsEn: [
+      { d: "There is", s: "There is", t: "有", m: ["mid", "smile"] },
+      { d: "a big tree", s: "a big tree", t: "一棵大樹", m: ["wide", "smile"] },
+      { d: "in the park", s: "in the park", t: "公園裡", m: ["smile", "wide"] },
+      { d: ".", s: "." }
     ]},
     { img: "images/bird.jpg", alt: "小熊向樹枝上的藍小鳥打招呼", zh: "小鳥說：「你好！」", en: "A little bird says, Hello!", yue: "小鳥話：你好！", enSpeak: "A little bird says hello!", spots: [
       { id: "bird-trees-l", left: 0, top: 0, width: 20, height: 72, yue: "樹", en: "trees", hint: false },
@@ -112,6 +162,16 @@
       { id: "bird-flowers", left: 0, top: 74, width: 100, height: 26, yue: "花", en: "flowers" },
       { id: "bird-bear", left: 10, top: 12, width: 46, height: 70, yue: "小熊", en: "Little Bear" },
       { id: "bird-bird", left: 66, top: 14, width: 26, height: 30, yue: "小鳥", en: "a little bird", motion: "bob" }
+    ], wordsZh: [
+      { d: "小鳥", s: "小鳥", t: "a little bird", m: ["smile", "round"] },
+      { d: "說", s: "話", t: "says", m: ["wide"] },
+      { d: "：「", s: "：" },
+      { d: "你好", s: "你好", t: "Hello", m: ["smile", "round"] },
+      { d: "！」", s: "！" }
+    ], wordsEn: [
+      { d: "A little bird", s: "A little bird", t: "小鳥", m: ["wide", "smile"] },
+      { d: "says,", s: "says", t: "說", m: ["mid"] },
+      { d: "Hello!", s: "hello!", t: "你好", m: ["mid", "round"] }
     ]},
     { img: "images/play.jpg", alt: "小熊和小鳥一起玩紅球", zh: "小熊和小鳥一起玩。", en: "Little Bear and the bird play together.", yue: "小熊同小鳥一齊玩。", enSpeak: "Little Bear and the bird play together.", fx: "petals", spots: [
       { id: "play-sky", left: 0, top: 0, width: 100, height: 52, yue: "白雲", en: "clouds", hint: false },
@@ -121,6 +181,20 @@
       { id: "play-bear", left: 14, top: 6, width: 48, height: 76, yue: "小熊", en: "Little Bear" },
       { id: "play-bird", left: 58, top: 46, width: 18, height: 20, yue: "小鳥", en: "a little bird", motion: "bob" },
       { id: "play-ball", left: 54, top: 62, width: 24, height: 28, yue: "波", en: "a ball", motion: "bounce" }
+    ], wordsZh: [
+      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
+      { d: "和", s: "同", t: "and", m: ["tight"] },
+      { d: "小鳥", s: "小鳥", t: "the bird", m: ["smile", "round"] },
+      { d: "一起", s: "一齊", t: "together", m: ["smile", "smile"] },
+      { d: "玩", s: "玩", t: "play", m: ["wide"] },
+      { d: "。", s: "。" }
+    ], wordsEn: [
+      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
+      { d: "and", s: "and", t: "和", m: ["wide"] },
+      { d: "the bird", s: "the bird", t: "小鳥", m: ["mid"] },
+      { d: "play", s: "play", t: "玩", m: ["mid"] },
+      { d: "together", s: "together", t: "一起", m: ["mid", "round"] },
+      { d: ".", s: "." }
     ]},
     { img: "images/sunset.jpg", alt: "夕陽下小熊沿著小路走回家", zh: "太陽下山了。小熊回家。", en: "The sun goes down. Little Bear goes home.", yue: "太陽落山啦。小熊返屋企。", enSpeak: "The sun goes down. Little Bear goes home.", fx: "sun", spots: [
       { id: "sunset-sky", left: 0, top: 0, width: 100, height: 36, yue: "天空", en: "the sky", hint: false },
@@ -132,6 +206,20 @@
       { id: "sunset-bear", left: 26, top: 10, width: 42, height: 78, yue: "小熊", en: "Little Bear", motion: "bob" },
       { id: "sunset-bird", left: 68, top: 8, width: 16, height: 16, yue: "小鳥", en: "a little bird", motion: "bob" },
       { id: "sunset-sun", left: 70, top: 34, width: 18, height: 22, yue: "太陽", en: "the sun" }
+    ], wordsZh: [
+      { d: "太陽", s: "太陽", t: "the sun", m: ["wide", "mid"] },
+      { d: "下山了", s: "落山啦", t: "goes down", m: ["round", "wide"] },
+      { d: "。", s: "。" },
+      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
+      { d: "回家", s: "返屋企", t: "goes home", m: ["wide", "tight", "smile"] },
+      { d: "。", s: "。" }
+    ], wordsEn: [
+      { d: "The sun", s: "The sun", t: "太陽", m: ["mid", "round"] },
+      { d: "goes down", s: "goes down", t: "下山了", m: ["round", "wide"] },
+      { d: ".", s: "." },
+      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
+      { d: "goes home", s: "goes home", t: "回家", m: ["round", "round"] },
+      { d: ".", s: "." }
     ]},
     { img: "images/night.jpg", alt: "小熊睡著了，小鳥在窗邊休息", zh: "晚安，小熊。", en: "Good night, Little Bear.", yue: "晚安，小熊。", enSpeak: "Good night, Little Bear.", fx: "stars", spots: [
       { id: "night-lamp", left: 0, top: 46, width: 16, height: 34, yue: "燈", en: "a lamp" },
@@ -144,6 +232,16 @@
       { id: "night-scarf", left: 70, top: 64, width: 28, height: 28, yue: "頸巾", en: "a scarf" },
       { id: "night-bear", left: 10, top: 14, width: 46, height: 54, yue: "小熊", en: "Little Bear" },
       { id: "night-bird", left: 68, top: 28, width: 22, height: 24, yue: "小鳥", en: "a little bird", motion: "bob" }
+    ], wordsZh: [
+      { d: "晚安", s: "晚安", t: "Good night", m: ["wide", "mid"] },
+      { d: "，", s: "，" },
+      { d: "小熊", s: "小熊", t: "Little Bear", m: ["smile", "tight"] },
+      { d: "。", s: "。" }
+    ], wordsEn: [
+      { d: "Good night", s: "Good night", t: "晚安", m: ["round", "smile"] },
+      { d: ",", s: "," },
+      { d: "Little Bear", s: "Little Bear", t: "小熊", m: ["smile", "mid"] },
+      { d: ".", s: "." }
     ]}
   ];
   const petals = [
@@ -161,19 +259,31 @@
     { left: 86, top: 3, delay: 1300, size: 5 }
   ];
   const waveScale = [0.4, 0.7, 1, 0.7, 0.4];
+  const MOUTH = {
+    rest: { d: "M32 62 Q50 70 68 62", fill: "none" },
+    closed: { d: "M34 64 L66 64", fill: "none" },
+    wide: { d: "M30 58 Q50 86 70 58 Q50 66 30 58 Z", fill: "#3b2a1a" },
+    mid: { d: "M33 60 Q50 78 67 60 Q50 66 33 60 Z", fill: "#3b2a1a" },
+    smile: { d: "M30 60 Q50 74 70 60", fill: "none" },
+    round: { d: "M50 70 m-8 -2 a8 9 0 1 1 16 0 a8 9 0 1 1 -16 0", fill: "#3b2a1a" },
+    tight: { d: "M50 70 m-5 -1 a5 6 0 1 1 10 0 a5 6 0 1 1 -10 0", fill: "#3b2a1a" }
+  };
 
   const state = {
     index: 0,
     mode: null,
-    echoLang: "yue",
+    bookLang: "yue",
     echoPhase: "listen",
-    secondLine: false,
     playing: null,
     popped: null,
     micStatus: "off",
     level: 0,
     hasClip: false,
-    label: null
+    label: null,
+    activeWord: -1,
+    wordPop: -1,
+    wordTip: -1,
+    mouth: "rest"
   };
 
   const refs = {
@@ -189,8 +299,55 @@
     clip: null,
     raf: 0,
     finishing: false,
-    micPromise: null
+    micPromise: null,
+    wordTimers: [],
+    mouthTimer: 0,
+    tipTimer: 0
   };
+
+  function isEn() { return state.bookLang === "en"; }
+  function txt(yue, en) { return isEn() ? en : yue; }
+  function pageTokens(page) {
+    return isEn() ? page.wordsEn : page.wordsZh;
+  }
+  function isPunct(tok) { return !tok || !tok.s || !tok.t; }
+  function joinSpeak(tokens) {
+    let out = "";
+    tokens.forEach((tok) => {
+      if (!tok.s) return;
+      const punct = /^[，。！、：；,.!?「」]+$/.test(tok.s);
+      if (!out || punct) out += tok.s;
+      else if (isEn()) out += " " + tok.s;
+      else out += tok.s;
+    });
+    return out;
+  }
+  function tokenStarts(tokens) {
+    const text = joinSpeak(tokens);
+    const starts = [];
+    let cursor = 0;
+    tokens.forEach((tok) => {
+      if (!tok.s) { starts.push(-1); return; }
+      const idx = text.indexOf(tok.s, cursor);
+      starts.push(idx < 0 ? cursor : idx);
+      cursor = (idx < 0 ? cursor : idx) + tok.s.length;
+    });
+    return starts;
+  }
+  function tokenAtChar(tokens, starts, charIndex) {
+    let hit = 0;
+    for (let i = 0; i < tokens.length; i++) {
+      if (starts[i] >= 0 && starts[i] <= charIndex) hit = i;
+    }
+    return hit;
+  }
+  function tokenDuration(tok, rate) {
+    if (isPunct(tok)) return 80 / rate;
+    const s = tok.s;
+    const en = /[a-zA-Z]/.test(s);
+    const base = en ? Math.max(280, s.replace(/[^a-zA-Z]/g, "").length * 70) : Math.max(280, Array.from(s).length * 340);
+    return base / rate;
+  }
 
   function findVoice(prefs, nameHints) {
     if (typeof speechSynthesis === "undefined") return null;
@@ -206,7 +363,7 @@
     return null;
   }
 
-  function speakText(text, lang, rate, onDone) {
+  function speakText(text, lang, rate, onDone, onBoundary) {
     if (typeof speechSynthesis === "undefined") { onDone(); return; }
     speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
@@ -221,6 +378,7 @@
       const voice = findVoice(["en-gb", "en-us", "en-au", "en"], ["samantha", "daniel", "karen"]);
       if (voice) utter.voice = voice;
     }
+    if (onBoundary) utter.onboundary = onBoundary;
     utter.onend = onDone;
     utter.onerror = onDone;
     speechSynthesis.speak(utter);
@@ -238,55 +396,162 @@
     if (shouldRender !== false) render();
   }
 
+  function clearWordTimers() {
+    refs.wordTimers.forEach(clearTimeout);
+    refs.wordTimers = [];
+    if (refs.mouthTimer) { clearInterval(refs.mouthTimer); refs.mouthTimer = 0; }
+  }
+
+  function applyMouth(shape) {
+    state.mouth = MOUTH[shape] ? shape : "rest";
+    const lip = document.getElementById("lips");
+    if (!lip) return;
+    const m = MOUTH[state.mouth];
+    lip.setAttribute("d", m.d);
+    lip.setAttribute("fill", m.fill);
+    lip.setAttribute("stroke", m.fill === "none" ? "#3b2a1a" : "none");
+  }
+
+  function startMouth(shapes) {
+    if (refs.mouthTimer) { clearInterval(refs.mouthTimer); refs.mouthTimer = 0; }
+    const list = (shapes && shapes.length) ? shapes : ["mid"];
+    let i = 0;
+    applyMouth(list[0]);
+    if (list.length > 1) {
+      refs.mouthTimer = setInterval(() => {
+        i = (i + 1) % list.length;
+        applyMouth(list[i]);
+      }, 150);
+    }
+  }
+
+  function setActiveWord(index, withTip) {
+    state.activeWord = index;
+    if (withTip) state.wordTip = index;
+    const tokens = pageTokens(pages[state.index]);
+    const tok = tokens[index];
+    if (tok && tok.m) startMouth(tok.m);
+    else applyMouth("rest");
+    syncWords();
+  }
+
+  function clearWordUi(shouldRender) {
+    clearWordTimers();
+    state.activeWord = -1;
+    state.wordPop = -1;
+    state.wordTip = -1;
+    applyMouth("rest");
+    if (shouldRender === false) syncWords();
+  }
+
   function stopClipAudio() {
     if (refs.clip) {
-      try { refs.clip.pause(); refs.clip.src = ""; } catch (e) {}
+      try { refs.clip.pause(); } catch (e) {}
       refs.clip = null;
     }
   }
 
   function stopListenLoop() {
-    refs.finishing = true;
     if (refs.raf) { cancelAnimationFrame(refs.raf); refs.raf = 0; }
-    const rec = refs.recorder;
-    if (rec && rec.state === "recording") {
-      try { rec.stop(); } catch (e) {}
-    }
-    refs.recorder = null;
-    set({ level: 0 }, false);
-    updateWave();
   }
 
   function stopTracks() {
-    stopListenLoop();
-    if (refs.audioCtx) { try { refs.audioCtx.close(); } catch (e) {} refs.audioCtx = null; }
+    if (refs.stream) {
+      refs.stream.getTracks().forEach((t) => t.stop());
+      refs.stream = null;
+    }
     refs.analyser = null;
-    if (refs.stream) { refs.stream.getTracks().forEach((t) => t.stop()); refs.stream = null; }
-    refs.micPromise = null;
+    if (refs.audioCtx) { try { refs.audioCtx.close(); } catch (e) {} refs.audioCtx = null; }
   }
 
   function clearClip() {
     stopClipAudio();
     if (refs.url) { URL.revokeObjectURL(refs.url); refs.url = null; }
-    set({ hasClip: false }, false);
+    refs.chunks = [];
+    state.hasClip = false;
   }
 
   function stopSpeak() {
     refs.gen += 1;
     if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
     stopClipAudio();
+    clearWordTimers();
     set({ playing: null }, false);
   }
 
-  function speak(lang, text, rate, onDone) {
+  function speak(lang, text, rate, onDone, tokens, baseIndex) {
     const gen = ++refs.gen;
     stopClipAudio();
+    clearWordTimers();
+    const list = tokens || null;
+    const offset = baseIndex || 0;
     set({ playing: lang });
-    speakText(text, lang, rate, () => {
-      if (refs.gen !== gen) return;
-      set({ playing: null });
-      if (onDone) onDone();
-    });
+    if (list && list.length) {
+      const starts = tokenStarts(list);
+      const first = list.findIndex((t) => !isPunct(t));
+      if (first >= 0) setActiveWord(offset + first, false);
+      let t = 0;
+      list.forEach((tok, i) => {
+        const delay = t;
+        refs.wordTimers.push(setTimeout(() => {
+          if (refs.gen !== gen) return;
+          setActiveWord(offset + i, false);
+        }, delay));
+        t += tokenDuration(tok, rate);
+      });
+      speakText(text, lang, rate, () => {
+        if (refs.gen !== gen) return;
+        clearWordUi(false);
+        set({ playing: null });
+        if (onDone) onDone();
+      }, (e) => {
+        if (refs.gen !== gen) return;
+        if (e.name && e.name !== "word") return;
+        const i = tokenAtChar(list, starts, e.charIndex || 0);
+        setActiveWord(offset + i, false);
+      });
+    } else {
+      speakText(text, lang, rate, () => {
+        if (refs.gen !== gen) return;
+        set({ playing: null });
+        if (onDone) onDone();
+      });
+    }
+  }
+
+  function speakPage(rate, onDone) {
+    const page = pages[state.index];
+    const tokens = pageTokens(page);
+    const text = joinSpeak(tokens) || (isEn() ? page.enSpeak : page.yue);
+    speak(state.bookLang, text, rate, onDone, tokens);
+  }
+
+  function recordingNow() {
+    return state.mode === "echo" && (state.echoPhase === "repeat" || state.echoPhase === "replay");
+  }
+
+  function onWordTap(index) {
+    const tokens = pageTokens(pages[state.index]);
+    const tok = tokens[index];
+    if (!tok || isPunct(tok)) return;
+    state.wordPop = index;
+    state.wordTip = index;
+    setActiveWord(index, true);
+    if (refs.tipTimer) clearTimeout(refs.tipTimer);
+    refs.tipTimer = setTimeout(() => {
+      if (state.wordPop === index) state.wordPop = -1;
+      if (state.playing !== state.bookLang && state.wordTip === index) {
+        state.wordTip = -1;
+        if (state.activeWord === index) state.activeWord = -1;
+        applyMouth("rest");
+      }
+      syncWords();
+    }, 1600);
+    if (recordingNow()) return;
+    speak(state.bookLang, tok.s, 0.95, () => {
+      if (state.wordTip === index) return;
+      clearWordUi(false);
+    }, [tok], index);
   }
 
   function playClip(onDone) {
@@ -295,6 +560,7 @@
     const gen = ++refs.gen;
     if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
     stopClipAudio();
+    clearWordTimers();
     set({ playing: "clip" });
     const audio = new Audio(url);
     refs.clip = audio;
@@ -437,27 +703,27 @@
     if (refs.finishing) return;
     refs.finishing = true;
     const url = await stopRecorder();
-    const lang = state.echoLang;
+    const lang = state.bookLang;
     if (url) {
-      set({ echoPhase: "replay", secondLine: true });
+      set({ echoPhase: "replay" });
       playClip(() => {
-        set({ echoPhase: "praise", secondLine: true });
+        set({ echoPhase: "praise" });
         speak(lang, lang === "yue" ? "好棒！" : "Great job!", 0.95);
       });
     } else {
-      set({ echoPhase: "praise", secondLine: true });
+      set({ echoPhase: "praise" });
       speak(lang, lang === "yue" ? "好棒！" : "Great job!", 0.95);
     }
   }
 
-  function beginEchoPage(pageIndex, lang) {
+  function beginEchoPage(pageIndex) {
     refs.finishing = true;
     if (refs.raf) { cancelAnimationFrame(refs.raf); refs.raf = 0; }
     clearClip();
-    set({ echoPhase: "listen", secondLine: false, level: 0, hasClip: false });
-    const text = lang === "yue" ? pages[pageIndex].yue : pages[pageIndex].enSpeak;
-    speak(lang, text, 0.8, () => {
-      set({ secondLine: true, echoPhase: "repeat" });
+    clearWordUi(false);
+    set({ echoPhase: "listen", level: 0, hasClip: false });
+    speakPage(0.8, () => {
+      set({ echoPhase: "repeat" });
       startRepeatListen();
     });
   }
@@ -468,13 +734,13 @@
     if (target === state.index) return;
     refs.finishing = true;
     if (refs.raf) { cancelAnimationFrame(refs.raf); refs.raf = 0; }
+    clearWordUi(false);
     set({ index: target, popped: null, label: null });
     const nextPage = pages[target];
     if (state.mode === "listen" && !nextPage.cover) {
-      set({ secondLine: true }, false);
-      speak("yue", nextPage.yue, 0.88);
+      speakPage(0.88);
     } else if (state.mode === "echo" && !nextPage.cover) {
-      beginEchoPage(target, state.echoLang);
+      beginEchoPage(target);
     } else {
       stopSpeak();
       render();
@@ -485,14 +751,15 @@
     refs.finishing = true;
     if (refs.raf) { cancelAnimationFrame(refs.raf); refs.raf = 0; }
     clearClip();
+    clearWordUi(false);
     set({ mode: nextMode, index: 1, popped: null, label: null, echoPhase: "listen", hasClip: false });
     if (nextMode === "listen") {
       stopTracks();
-      set({ micStatus: "off", secondLine: true }, false);
-      speak("yue", pages[1].yue, 0.88);
+      set({ micStatus: "off" }, false);
+      speakPage(0.88);
     } else {
       await ensureMic();
-      beginEchoPage(1, state.echoLang);
+      beginEchoPage(1);
     }
   }
 
@@ -502,18 +769,19 @@
     stopListenLoop();
     stopTracks();
     clearClip();
-    set({ mode: null, index: 0, echoPhase: "listen", micStatus: "off", popped: null, label: null, hasClip: false, secondLine: false });
+    clearWordUi(false);
+    set({ mode: null, index: 0, echoPhase: "listen", micStatus: "off", popped: null, label: null, hasClip: false });
   }
 
-  function changeEchoLang(lang) {
-    state.echoLang = lang;
-    if (state.mode === "echo" && state.index > 0) beginEchoPage(state.index, lang);
-    else render();
+  function setBookLang(lang) {
+    if (state.mode !== null) return;
+    document.documentElement.lang = lang === "en" ? "en" : "zh-HK";
+    set({ bookLang: lang });
   }
 
   function replayModel() {
-    if (state.mode === "echo") beginEchoPage(state.index, state.echoLang);
-    else speak("yue", pages[state.index].yue, 0.88);
+    if (state.mode === "echo") beginEchoPage(state.index);
+    else speakPage(0.88);
   }
 
   async function retryMic() {
@@ -531,7 +799,7 @@
 
   function onSpotClick(spot) {
     popSpot(spot.id);
-    const lang = state.mode === "echo" ? state.echoLang : (state.playing === "en" ? "en" : "yue");
+    const lang = state.bookLang;
     set({ label: { id: spot.id, text: lang === "yue" ? spot.yue : spot.en } });
     setTimeout(() => { if (state.label && state.label.id === spot.id) set({ label: null }); }, 1100);
     if (state.mode === "echo" && (state.echoPhase === "listen" || state.echoPhase === "repeat" || state.echoPhase === "replay")) return;
@@ -545,9 +813,7 @@
       el.animate([{ transform: "scale(1)" }, { transform: "scale(1.02)" }, { transform: "scale(1)" }], { duration: 420, easing: "ease-out" });
     }
     if (state.mode === "echo" && (state.echoPhase === "listen" || state.echoPhase === "repeat" || state.echoPhase === "replay")) return;
-    const page = pages[state.index];
-    const lang = state.mode === "echo" ? state.echoLang : (state.playing === "en" ? "en" : "yue");
-    speak(lang, lang === "yue" ? page.yue : page.enSpeak, 0.95);
+    speakPage(0.95);
   }
 
   function updateWave() {
@@ -567,7 +833,7 @@
   function overlayHTML(page) {
     let fx = "";
     if (page.fx === "petals") {
-      fx = petals.map((p, i) => `<span class="petal" style="left:${p.left}%;width:${p.size}px;height:${p.size}px;background:${p.color};animation-delay:${p.delay}ms"></span>`).join("");
+      fx = petals.map((p) => `<span class="petal" style="left:${p.left}%;width:${p.size}px;height:${p.size}px;background:${p.color};animation-delay:${p.delay}ms"></span>`).join("");
     } else if (page.fx === "stars") {
       fx = stars.map((s) => `<span class="star" style="left:${s.left}%;top:${s.top}%;width:${s.size}px;height:${s.size}px;animation-delay:${s.delay}ms"></span>`).join("");
     } else if (page.fx === "sun") {
@@ -609,95 +875,126 @@
     if (sparks.innerHTML !== html) sparks.innerHTML = html;
   }
 
+  function syncWords() {
+    const root = document.getElementById("words");
+    if (root) {
+      root.querySelectorAll("[data-word]").forEach((btn) => {
+        const i = Number(btn.getAttribute("data-word"));
+        btn.classList.toggle("on", state.activeWord === i);
+        btn.classList.toggle("pop", state.wordPop === i);
+      });
+    }
+    const dock = document.getElementById("word-dock");
+    if (!dock) return;
+    const tokens = pageTokens(pages[state.index]);
+    const tip = state.wordTip >= 0 ? tokens[state.wordTip] : (state.activeWord >= 0 ? tokens[state.activeWord] : null);
+    const show = tip && tip.t && (state.wordTip >= 0 || state.playing === state.bookLang);
+    const face = dock.querySelector(".mouth-face");
+    const trans = dock.querySelector(".mouth-trans");
+    if (face) face.hidden = !show;
+    if (trans) {
+      trans.hidden = !(show && state.wordTip >= 0 && tip.t);
+      trans.textContent = (show && state.wordTip >= 0 && tip.t) ? tip.t : "";
+    }
+    applyMouth(show ? state.mouth : "rest");
+  }
+
+  function wordsHTML(page) {
+    const tokens = pageTokens(page);
+    const words = tokens.map((tok, i) => {
+      if (isPunct(tok)) return `<span class="punct">${esc(tok.d)}</span>`;
+      const on = state.activeWord === i ? " on" : "";
+      const pop = state.wordPop === i ? " pop" : "";
+      return `<button type="button" class="word${on}${pop}" data-word="${i}">${esc(tok.d)}</button>`;
+    }).join("");
+    const tip = state.wordTip >= 0 ? tokens[state.wordTip] : null;
+    const showFace = (tip && tip.t) || (state.activeWord >= 0 && state.playing === state.bookLang);
+    const m = MOUTH[state.mouth] || MOUTH.rest;
+    return `<div class="words" id="words">${words}</div>
+      <div class="word-dock" id="word-dock">
+        <div class="mouth-face" ${showFace ? "" : "hidden"} aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="46" fill="#ffe8b0" stroke="#3b2a1a" stroke-width="3"></circle>
+            <circle cx="35" cy="40" r="5" fill="#3b2a1a"></circle>
+            <circle cx="65" cy="40" r="5" fill="#3b2a1a"></circle>
+            <path id="lips" d="${m.d}" fill="${m.fill}" stroke="${m.fill === "none" ? "#3b2a1a" : "none"}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="mouth-trans" ${tip && tip.t ? "" : "hidden"}>${tip && tip.t ? esc(tip.t) : ""}</div>
+      </div>`;
+  }
+
   function panelHTML() {
     const page = pages[state.index];
     const onCover = !!page.cover;
     const last = state.index === pages.length - 1;
-    const showEnFirst = state.mode === "echo" && state.echoLang === "en";
-    const zhActive = state.playing === "yue";
-    const enActive = state.playing === "en";
-
-    const zhLine = `<div class="line${zhActive ? " active" : ""}">${esc(page.zh)}</div>`;
-    const enLine = `<div class="line${enActive ? " active" : ""}" style="font-size:20px">${esc(page.en)}</div>`;
-    const spacer = `<div class="line" style="visibility:hidden;font-size:20px">.</div>`;
-    let lines = "";
-    if (!onCover) {
-      if (showEnFirst) lines = enLine + (state.secondLine ? zhLine : spacer);
-      else lines = zhLine + ((state.mode !== "echo" || state.secondLine || state.echoLang === "en") ? enLine : spacer);
-    }
 
     if (onCover) {
       return `<div class="center">
         <div class="title">小熊去公園</div>
         <div class="sub">Little Bear Goes to the Park</div>
-        <div class="hint-text">成幅圖都可以撳，聽同玩</div>
-        <button type="button" class="btn primary" data-act="listen">聽故事</button>
-        <button type="button" class="btn teal" data-act="echo">跟讀</button>
+        <div class="hint-text">${txt("先揀語言", "Choose a language first")}</div>
+        <div class="row">
+          <button type="button" class="btn${state.bookLang === "yue" ? " on" : ""}" data-act="lang-yue" style="flex:1 1 140px;max-width:200px">中文</button>
+          <button type="button" class="btn${state.bookLang === "en" ? " on" : ""}" data-act="lang-en" style="flex:1 1 140px;max-width:200px">English</button>
+        </div>
+        <button type="button" class="btn primary" data-act="listen">${txt("聽故事", "Listen")}</button>
+        <button type="button" class="btn teal" data-act="echo">${txt("跟讀", "Read with me")}</button>
       </div>`;
     }
 
-    let head = "";
-    if (state.mode === "echo") {
-      head = `<div class="row">
-          <button type="button" class="btn${state.echoLang === "yue" ? " on" : ""}" data-act="lang-yue" style="flex:1 1 140px;max-width:200px">粵語</button>
-          <button type="button" class="btn${state.echoLang === "en" ? " on" : ""}" data-act="lang-en" style="flex:1 1 140px;max-width:200px">English</button>
-        </div>`;
-    } else {
-      head = `<div class="hint-text">撳圖裡面任何地方，都可以聽同玩</div>`;
-    }
     let phase = "";
     if (state.mode === "echo" && state.echoPhase === "repeat") {
       const wave = state.micStatus === "on"
         ? `<div class="wave" id="wave">${waveScale.map((h) => `<span style="height:${Math.max(8, Math.round(8 + h * state.level * 28))}px"></span>`).join("")}</div>`
         : "";
       let hint;
-      if (state.micStatus === "on") hint = "讀完會自動聽返你；亦可以撳「我讀完喇」";
-      else if (!window.isSecureContext) hint = "請用 Chrome 打開呢個網頁，先可以開咪高峰。而家可以撳「我讀完喇」。";
-      else hint = "開唔到咪高峰，讀完請撳「我讀完喇」。亦可撳「再開咪」。";
+      if (state.micStatus === "on") hint = txt("讀完會自動聽返你；亦可以撳「我讀完喇」", "I will play it back when you finish. You can also tap “I finished”.");
+      else if (!window.isSecureContext) hint = txt("請用 Chrome 打開呢個網頁，先可以開咪高峰。而家可以撳「我讀完喇」。", "Please open this page in Chrome so the microphone can work. You can tap “I finished”.");
+      else hint = txt("開唔到咪高峰，讀完請撳「我讀完喇」。亦可撳「再開咪」。", "The microphone is not on. Tap “I finished” when you are done, or “Try mic again”.");
       const retry = state.micStatus !== "on" && window.isSecureContext
-        ? `<button type="button" class="btn" data-act="retry-mic" style="min-height:44px;font-size:16px">再開咪</button>`
+        ? `<button type="button" class="btn" data-act="retry-mic" style="min-height:44px;font-size:16px">${txt("再開咪", "Try mic again")}</button>`
         : "";
-      phase = `<div class="center" style="gap:8px"><div class="phase">而家你讀</div>${wave}<div class="hint-text">${hint}</div>${retry}</div>`;
+      phase = `<div class="center" style="gap:8px"><div class="phase">${txt("而家你讀", "Your turn")}</div>${wave}<div class="hint-text">${hint}</div>${retry}</div>`;
     } else if (state.mode === "echo" && state.echoPhase === "replay") {
-      phase = `<div class="phase">聽返你自己</div>`;
+      phase = `<div class="phase">${txt("聽返你自己", "Listen to you")}</div>`;
     } else if (state.mode === "echo" && state.echoPhase === "praise") {
-      phase = `<div class="phase big">好棒！</div>`;
+      phase = `<div class="phase big">${txt("好棒！", "Great job!")}</div>`;
     }
 
     let actions = "";
     if (state.mode === "listen") {
       actions = `<div class="row">
-          <button type="button" class="btn${state.playing === "yue" ? " on" : ""}" data-act="speak-yue" style="flex:1 1 140px;max-width:200px">粵語</button>
-          <button type="button" class="btn${state.playing === "en" ? " on" : ""}" data-act="speak-en" style="flex:1 1 140px;max-width:200px">English</button>
+          <button type="button" class="btn" data-act="replay-model" style="flex:1 1 140px;max-width:200px">${txt("再聽一次", "Listen again")}</button>
         </div>`;
     }
     if (state.mode === "echo" && state.echoPhase === "repeat") {
       actions += `<div class="row">
-          <button type="button" class="btn" data-act="replay-model" style="flex:1 1 140px;max-width:200px">再聽一次</button>
-          <button type="button" class="btn primary" data-act="done" style="flex:1 1 140px;max-width:220px">我讀完喇</button>
+          <button type="button" class="btn" data-act="replay-model" style="flex:1 1 140px;max-width:200px">${txt("再聽一次", "Listen again")}</button>
+          <button type="button" class="btn primary" data-act="done" style="flex:1 1 140px;max-width:220px">${txt("我讀完喇", "I finished")}</button>
         </div>`;
     }
     if (state.mode === "echo" && state.echoPhase === "praise") {
       actions += `<div class="row">
-          ${state.hasClip ? `<button type="button" class="btn${state.playing === "clip" ? " on" : ""}" data-act="play-clip" style="flex:1 1 140px;max-width:200px">聽返自己</button>` : ""}
-          <button type="button" class="btn" data-act="replay-model" style="flex:1 1 140px;max-width:200px">再聽一次</button>
+          ${state.hasClip ? `<button type="button" class="btn${state.playing === "clip" ? " on" : ""}" data-act="play-clip" style="flex:1 1 140px;max-width:200px">${txt("聽返自己", "Play my voice")}</button>` : ""}
+          <button type="button" class="btn" data-act="replay-model" style="flex:1 1 140px;max-width:200px">${txt("再聽一次", "Listen again")}</button>
           ${last
-            ? `<button type="button" class="btn primary" data-act="echo-again" style="flex:1 1 140px;max-width:220px">再讀一次</button>`
-            : `<button type="button" class="btn primary" data-act="next" style="flex:1 1 140px;max-width:220px">下一頁</button>`}
+            ? `<button type="button" class="btn primary" data-act="echo-again" style="flex:1 1 140px;max-width:220px">${txt("再讀一次", "Read again")}</button>`
+            : `<button type="button" class="btn primary" data-act="next" style="flex:1 1 140px;max-width:220px">${txt("下一頁", "Next")}</button>`}
         </div>`;
     }
     if (state.mode === "listen" && last) {
-      actions += `<div class="row"><button type="button" class="btn primary" data-act="listen-again">再睇一次</button></div>`;
+      actions += `<div class="row"><button type="button" class="btn primary" data-act="listen-again">${txt("再睇一次", "Start again")}</button></div>`;
     }
 
     const dots = pages.slice(1).map((_, i) => `<i class="${i + 1 === state.index ? "cur" : ""}"></i>`).join("");
-    return `<div class="panel">${head}${phase}${lines}${actions}
+    return `<div class="panel">${phase}${wordsHTML(page)}${actions}
         <div class="row">
           <button type="button" class="btn nav" data-act="prev" ${state.index <= 1 ? "disabled" : ""}>‹</button>
           <div class="dots">${dots}</div>
           <button type="button" class="btn nav" data-act="next" ${last ? "disabled" : ""}>›</button>
         </div>
-        <div class="row"><button type="button" class="btn" data-act="cover" style="min-height:44px;font-size:16px">封面</button></div>
+        <div class="row"><button type="button" class="btn" data-act="cover" style="min-height:44px;font-size:16px">${txt("封面", "Cover")}</button></div>
       </div>`;
   }
 
@@ -707,6 +1004,7 @@
     const stage = document.getElementById("stage");
     const samePage = stage && stage.getAttribute("data-index") === String(state.index);
     const mid = panelHTML();
+    appEl.className = page.cover ? "cover" : "reading";
 
     if (!samePage) {
       const stageHtml = `<div class="stage-wrap enter" id="stage" data-index="${state.index}">
@@ -724,6 +1022,7 @@
       document.getElementById("panel").innerHTML = mid;
     }
     syncSpotUi();
+    syncWords();
   }
 
   const app = document.getElementById("app");
@@ -741,9 +1040,13 @@
     else if (dx > 50) { refs.swiped = true; go(state.index - 1); }
   });
   app.addEventListener("click", (e) => {
+    const wordBtn = e.target.closest("[data-word]");
+    if (wordBtn) {
+      onWordTap(Number(wordBtn.getAttribute("data-word")));
+      return;
+    }
     const spotBtn = e.target.closest("[data-spot]");
     if (spotBtn) {
-      e.preventDefault();
       e.stopPropagation();
       if (refs.swiped) { refs.swiped = false; return; }
       const spot = pages[state.index].spots.find((s) => s.id === spotBtn.getAttribute("data-spot"));
@@ -759,10 +1062,8 @@
     const act = btn.getAttribute("data-act");
     if (act === "listen") void startBook("listen");
     else if (act === "echo") void startBook("echo");
-    else if (act === "lang-yue") changeEchoLang("yue");
-    else if (act === "lang-en") changeEchoLang("en");
-    else if (act === "speak-yue") speak("yue", pages[state.index].yue, 0.88);
-    else if (act === "speak-en") speak("en", pages[state.index].enSpeak, 0.88);
+    else if (act === "lang-yue") setBookLang("yue");
+    else if (act === "lang-en") setBookLang("en");
     else if (act === "replay-model") replayModel();
     else if (act === "done") void finishRepeat();
     else if (act === "play-clip") playClip();
